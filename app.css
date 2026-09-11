@@ -236,6 +236,22 @@
         transform: translateX(20px);
       }
 
+      .theme-select {
+        background: var(--bg-format-bar);
+        color: var(--text-primary);
+        border: 1px solid var(--border-secondary);
+        border-radius: 4px;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.8rem;
+        max-width: 160px;
+        cursor: pointer;
+      }
+
+      .theme-select:focus {
+        outline: 2px solid var(--accent-blue);
+        outline-offset: 1px;
+      }
+
       #editor {
         padding: 2rem;
         min-height: calc(100vh - 80px);
@@ -639,4 +655,510 @@
         #editor th {
           background: #f5f5f5 !important;
         }
+      }
+
+      /* ========================================
+         Fable 5.1 Themes (001-020)
+         Each theme maps a Fable study palette to
+         the Marky CSS variable system.
+         ======================================== */
+
+      /* 001 — Lumen / Aurora Glass (deep indigo + violet/teal/rose/amber) */
+      [data-theme="aurora-glass"] {
+        --bg-primary: #0b1028;
+        --bg-secondary: #070a1c;
+        --bg-toolbar: #101a48;
+        --bg-editor: #131b45;
+        --bg-editor-focus: #182158;
+        --bg-format-bar: #1a2456;
+        --bg-code-block: #1e2760;
+        --text-primary: #eef0ff;
+        --text-secondary: #a3a9d1;
+        --text-heading: #ffffff;
+        --text-heading-secondary: #c9cdf5;
+        --text-toolbar: #070a1c;
+        --border-primary: #2a3260;
+        --border-secondary: #3a447e;
+        --border-heading: #2a3260;
+        --border-blockquote: #ff7ab6;
+        --border-table: #3a447e;
+        --accent-blue: #4ee6c7;
+        --accent-blue-hover: #8b7dff;
+        --shadow-light: rgba(0, 0, 0, 0.45);
+        --shadow-medium: rgba(0, 0, 0, 0.55);
+      }
+
+      /* 002 — Brutalist Manifesto (paper + ink + acid yellow + signal red) */
+      [data-theme="brutalist-manifesto"] {
+        --bg-primary: #f2efe9;
+        --bg-secondary: #e4dfd3;
+        --bg-toolbar: #0a0a0a;
+        --bg-editor: #f2efe9;
+        --bg-editor-focus: #faf7f0;
+        --bg-format-bar: #f2efe9;
+        --bg-code-block: #e5e0d2;
+        --text-primary: #0a0a0a;
+        --text-secondary: #4a4844;
+        --text-heading: #0a0a0a;
+        --text-heading-secondary: #222222;
+        --text-toolbar: #ffffff;
+        --border-primary: #0a0a0a;
+        --border-secondary: #0a0a0a;
+        --border-heading: #0a0a0a;
+        --border-blockquote: #ff2e1f;
+        --border-table: #0a0a0a;
+        --accent-blue: #ff2e1f;
+        --accent-blue-hover: #c92416;
+        --shadow-light: rgba(0, 0, 0, 0.25);
+        --shadow-medium: rgba(0, 0, 0, 0.35);
+      }
+
+      /* 003 — Softdesk Neumorphic (warm grey + coral + teal) */
+      [data-theme="softdesk-neumorphic"] {
+        --bg-primary: #e0e5ec;
+        --bg-secondary: #cdd4de;
+        --bg-toolbar: #3d4a5c;
+        --bg-editor: #e6ebf2;
+        --bg-editor-focus: #eef2f8;
+        --bg-format-bar: #e6ebf2;
+        --bg-code-block: #d3dae4;
+        --text-primary: #3d4a5c;
+        --text-secondary: #6b7a90;
+        --text-heading: #2c3542;
+        --text-heading-secondary: #3d4a5c;
+        --text-toolbar: #ffffff;
+        --border-primary: #a3b1c6;
+        --border-secondary: #8d9bb0;
+        --border-heading: #b9c3d2;
+        --border-blockquote: #ff7a59;
+        --border-table: #a3b1c6;
+        --accent-blue: #0e9a90;
+        --accent-blue-hover: #0b7d75;
+        --shadow-light: rgba(163, 177, 198, 0.5);
+        --shadow-medium: rgba(61, 74, 92, 0.3);
+      }
+
+      /* 004 — Kestrel Terminal (near-black + magenta/cyan) */
+      [data-theme="kestrel-terminal"] {
+        --bg-primary: #05060a;
+        --bg-secondary: #030408;
+        --bg-toolbar: #0a0c18;
+        --bg-editor: #0a0c16;
+        --bg-editor-focus: #0e1222;
+        --bg-format-bar: #0e1222;
+        --bg-code-block: #10142a;
+        --text-primary: #d8e6ff;
+        --text-secondary: #6b7390;
+        --text-heading: #00f0ff;
+        --text-heading-secondary: #9fd8ff;
+        --text-toolbar: #ffffff;
+        --border-primary: #2a2f4a;
+        --border-secondary: #3a4066;
+        --border-heading: #232842;
+        --border-blockquote: #00f0ff;
+        --border-table: #2a2f4a;
+        --accent-blue: #ff2bd6;
+        --accent-blue-hover: #c91dae;
+        --shadow-light: rgba(0, 240, 255, 0.08);
+        --shadow-medium: rgba(255, 43, 214, 0.18);
+      }
+
+      /* 005 — Mercury Chrome (charcoal + chrome horizon) */
+      [data-theme="mercury-chrome"] {
+        --bg-primary: #1b1c1f;
+        --bg-secondary: #101113;
+        --bg-toolbar: #0e0f12;
+        --bg-editor: #1f2125;
+        --bg-editor-focus: #26282e;
+        --bg-format-bar: #232428;
+        --bg-code-block: #2b2d33;
+        --text-primary: #e8eaed;
+        --text-secondary: #808996;
+        --text-heading: #fafafc;
+        --text-heading-secondary: #bec4ce;
+        --text-toolbar: #ffffff;
+        --border-primary: #484e5a;
+        --border-secondary: #585a60;
+        --border-heading: #33363d;
+        --border-blockquote: #bec4ce;
+        --border-table: #484e5a;
+        --accent-blue: #7d8aa0;
+        --accent-blue-hover: #97a5bc;
+        --shadow-light: rgba(0, 0, 0, 0.5);
+        --shadow-medium: rgba(0, 0, 0, 0.6);
+      }
+
+      /* 006 — Constellation (navy void + periwinkle) */
+      [data-theme="constellation"] {
+        --bg-primary: #060b1f;
+        --bg-secondary: #03061a;
+        --bg-toolbar: #0a1030;
+        --bg-editor: #0a1130;
+        --bg-editor-focus: #0e1640;
+        --bg-format-bar: #0e1640;
+        --bg-code-block: #131c4e;
+        --text-primary: #dfe3ff;
+        --text-secondary: #7a84b8;
+        --text-heading: #ffffff;
+        --text-heading-secondary: #a9b4ff;
+        --text-toolbar: #ffffff;
+        --border-primary: #2a3260;
+        --border-secondary: #424fa0;
+        --border-heading: #232a55;
+        --border-blockquote: #a9b4ff;
+        --border-table: #2a3260;
+        --accent-blue: #6c7bff;
+        --accent-blue-hover: #5463ee;
+        --shadow-light: rgba(0, 0, 0, 0.5);
+        --shadow-medium: rgba(66, 79, 160, 0.4);
+      }
+
+      /* 007 — Fog Editorial (cream paper + slate) */
+      [data-theme="fog-editorial"] {
+        --bg-primary: #f4efe6;
+        --bg-secondary: #ece5d8;
+        --bg-toolbar: #151311;
+        --bg-editor: #faf7f0;
+        --bg-editor-focus: #fffdf7;
+        --bg-format-bar: #f4efe6;
+        --bg-code-block: #e7ddc9;
+        --text-primary: #151311;
+        --text-secondary: #3d3934;
+        --text-heading: #151311;
+        --text-heading-secondary: #3d3934;
+        --text-toolbar: #f4efe6;
+        --border-primary: #d5ccbb;
+        --border-secondary: #b8ad99;
+        --border-heading: #d5ccbb;
+        --border-blockquote: #6d7f8a;
+        --border-table: #c4b9a4;
+        --accent-blue: #546973;
+        --accent-blue-hover: #42545d;
+        --shadow-light: rgba(21, 19, 17, 0.12);
+        --shadow-medium: rgba(21, 19, 17, 0.2);
+      }
+
+      /* 008 — Halden Luxury (near-black + warm gold) */
+      [data-theme="halden-luxury"] {
+        --bg-primary: #0a0a0b;
+        --bg-secondary: #060607;
+        --bg-toolbar: #0a0a0b;
+        --bg-editor: #141315;
+        --bg-editor-focus: #1a191c;
+        --bg-format-bar: #1c1b1e;
+        --bg-code-block: #222126;
+        --text-primary: #ece9e2;
+        --text-secondary: #a09c92;
+        --text-heading: #f5f2ea;
+        --text-heading-secondary: #d5d0c2;
+        --text-toolbar: #0a0a0b;
+        --border-primary: #2b2a28;
+        --border-secondary: #3d3c38;
+        --border-heading: #2b2a28;
+        --border-blockquote: #c9b48a;
+        --border-table: #2b2a28;
+        --accent-blue: #c9b48a;
+        --accent-blue-hover: #b39d73;
+        --shadow-light: rgba(0, 0, 0, 0.6);
+        --shadow-medium: rgba(0, 0, 0, 0.7);
+      }
+
+      /* 009 — Breathe Dawn (plum base + coral/violet/teal/gold) */
+      [data-theme="breathe-dawn"] {
+        --bg-primary: #1a1030;
+        --bg-secondary: #120b22;
+        --bg-toolbar: #140c28;
+        --bg-editor: #251741;
+        --bg-editor-focus: #2c1d4e;
+        --bg-format-bar: #2a1d4e;
+        --bg-code-block: #332457;
+        --text-primary: #fff1e8;
+        --text-secondary: #c9a89a;
+        --text-heading: #ffffff;
+        --text-heading-secondary: #f5b942;
+        --text-toolbar: #ffffff;
+        --border-primary: #4a3670;
+        --border-secondary: #5f4a8a;
+        --border-heading: #3a2a5c;
+        --border-blockquote: #14b8a6;
+        --border-table: #4a3670;
+        --accent-blue: #ff6b57;
+        --accent-blue-hover: #d85544;
+        --shadow-light: rgba(0, 0, 0, 0.45);
+        --shadow-medium: rgba(123, 77, 255, 0.3);
+      }
+
+      /* 010 — Paper Valley Dusk (violet dusk + gold/rose) */
+      [data-theme="paper-valley-dusk"] {
+        --bg-primary: #2b1f44;
+        --bg-secondary: #1c1533;
+        --bg-toolbar: #130f26;
+        --bg-editor: #3a2a54;
+        --bg-editor-focus: #443364;
+        --bg-format-bar: #3a2a54;
+        --bg-code-block: #241b3d;
+        --text-primary: #f7d5c4;
+        --text-secondary: #c9a092;
+        --text-heading: #ffd28a;
+        --text-heading-secondary: #f7b26a;
+        --text-toolbar: #2b1f44;
+        --border-primary: #6a4f83;
+        --border-secondary: #8b6a9c;
+        --border-heading: #4f3a6b;
+        --border-blockquote: #c9698a;
+        --border-table: #6a4f83;
+        --accent-blue: #f7b26a;
+        --accent-blue-hover: #d8944f;
+        --shadow-light: rgba(0, 0, 0, 0.45);
+        --shadow-medium: rgba(0, 0, 0, 0.55);
+      }
+
+      /* 011 — Neon Drift (phosphor green + cyan/magenta/amber) */
+      [data-theme="neon-drift"] {
+        --bg-primary: #0b0b0d;
+        --bg-secondary: #050507;
+        --bg-toolbar: #141416;
+        --bg-editor: #020603;
+        --bg-editor-focus: #071007;
+        --bg-format-bar: #0e140e;
+        --bg-code-block: #0c1a0c;
+        --text-primary: #39ff6a;
+        --text-secondary: #1f8a3c;
+        --text-heading: #baffcf;
+        --text-heading-secondary: #7de89a;
+        --text-toolbar: #ffffff;
+        --border-primary: #1f8a3c;
+        --border-secondary: #2bd8ff;
+        --border-heading: #14401e;
+        --border-blockquote: #2bd8ff;
+        --border-table: #1f5a2a;
+        --accent-blue: #ff3cac;
+        --accent-blue-hover: #d42a8d;
+        --shadow-light: rgba(57, 255, 106, 0.12);
+        --shadow-medium: rgba(255, 60, 172, 0.25);
+      }
+
+      /* 012 — Orbit Solar (space black + sun gradient orange) */
+      [data-theme="orbit-solar"] {
+        --bg-primary: #070a1c;
+        --bg-secondary: #02030a;
+        --bg-toolbar: #050614;
+        --bg-editor: #0b0e24;
+        --bg-editor-focus: #10143a;
+        --bg-format-bar: #10143a;
+        --bg-code-block: #161b4a;
+        --text-primary: #fff9d6;
+        --text-secondary: #a99e7a;
+        --text-heading: #ffe28a;
+        --text-heading-secondary: #ffb428;
+        --text-toolbar: #ffffff;
+        --border-primary: #2a2f55;
+        --border-secondary: #3d447e;
+        --border-heading: #232746;
+        --border-blockquote: #ffb428;
+        --border-table: #2a2f55;
+        --accent-blue: #ff7a12;
+        --accent-blue-hover: #d9650b;
+        --shadow-light: rgba(0, 0, 0, 0.5);
+        --shadow-medium: rgba(255, 122, 18, 0.25);
+      }
+
+      /* 013 — Sumi Ink (washi paper + indigo + vermilion) */
+      [data-theme="sumi-ink"] {
+        --bg-primary: #faf7f0;
+        --bg-secondary: #ece7d9;
+        --bg-toolbar: #16161a;
+        --bg-editor: #fffdf8;
+        --bg-editor-focus: #ffffff;
+        --bg-format-bar: #faf7f0;
+        --bg-code-block: #e9e2d0;
+        --text-primary: #16161a;
+        --text-secondary: #55555c;
+        --text-heading: #1b2a5e;
+        --text-heading-secondary: #2f448a;
+        --text-toolbar: #faf7f0;
+        --border-primary: #d5cfbe;
+        --border-secondary: #b8b09a;
+        --border-heading: #d5cfbe;
+        --border-blockquote: #d94a2a;
+        --border-table: #c4bda6;
+        --accent-blue: #2a3f8a;
+        --accent-blue-hover: #1b2a5e;
+        --shadow-light: rgba(22, 22, 26, 0.1);
+        --shadow-medium: rgba(22, 22, 26, 0.18);
+      }
+
+      /* 014 — Nocturne Sea (warm black + bone + sea teal) */
+      [data-theme="nocturne-sea"] {
+        --bg-primary: #161311;
+        --bg-secondary: #0e0c0b;
+        --bg-toolbar: #0a0908;
+        --bg-editor: #1b1714;
+        --bg-editor-focus: #221d19;
+        --bg-format-bar: #221d19;
+        --bg-code-block: #2a2420;
+        --text-primary: #ece6d9;
+        --text-secondary: #a09a88;
+        --text-heading: #f7f1e1;
+        --text-heading-secondary: #d8d0bd;
+        --text-toolbar: #ece6d9;
+        --border-primary: #3a352f;
+        --border-secondary: #4e483f;
+        --border-heading: #2e2a25;
+        --border-blockquote: #2aa3ab;
+        --border-table: #3a352f;
+        --accent-blue: #2aa3ab;
+        --accent-blue-hover: #1f858c;
+        --shadow-light: rgba(0, 0, 0, 0.5);
+        --shadow-medium: rgba(0, 0, 0, 0.6);
+      }
+
+      /* 015 — Meridian City (pastel blocks + grass + asphalt) */
+      [data-theme="meridian-city"] {
+        --bg-primary: #ece8dd;
+        --bg-secondary: #d9d3c7;
+        --bg-toolbar: #5b5f6b;
+        --bg-editor: #faf8f2;
+        --bg-editor-focus: #ffffff;
+        --bg-format-bar: #f2eee4;
+        --bg-code-block: #e0dacb;
+        --text-primary: #2e3138;
+        --text-secondary: #6b6f7a;
+        --text-heading: #3a3e47;
+        --text-heading-secondary: #4f545f;
+        --text-toolbar: #ffffff;
+        --border-primary: #c9c2b4;
+        --border-secondary: #a8a193;
+        --border-heading: #d5cfc0;
+        --border-blockquote: #4f8a48;
+        --border-table: #c9c2b4;
+        --accent-blue: #3f7040;
+        --accent-blue-hover: #335a35;
+        --shadow-light: rgba(91, 95, 107, 0.18);
+        --shadow-medium: rgba(91, 95, 107, 0.28);
+      }
+
+      /* 016 — Ether Smoke (near-black + electric blue) */
+      [data-theme="ether-smoke"] {
+        --bg-primary: #080b18;
+        --bg-secondary: #04050a;
+        --bg-toolbar: #04050a;
+        --bg-editor: #0b1026;
+        --bg-editor-focus: #0f1533;
+        --bg-format-bar: #0f1533;
+        --bg-code-block: #151c40;
+        --text-primary: #e8ecff;
+        --text-secondary: #6d7fd6;
+        --text-heading: #ffffff;
+        --text-heading-secondary: #b7c4ff;
+        --text-toolbar: #ffffff;
+        --border-primary: #232a4d;
+        --border-secondary: #35406f;
+        --border-heading: #1c2240;
+        --border-blockquote: #b7c4ff;
+        --border-table: #232a4d;
+        --accent-blue: #5b7bff;
+        --accent-blue-hover: #465fdd;
+        --shadow-light: rgba(0, 0, 0, 0.5);
+        --shadow-medium: rgba(91, 123, 255, 0.25);
+      }
+
+      /* 017 — Pulse Heartbeat (navy + mint/coral/periwinkle) */
+      [data-theme="pulse-heartbeat"] {
+        --bg-primary: #0a1226;
+        --bg-secondary: #050914;
+        --bg-toolbar: #050914;
+        --bg-editor: #0e1832;
+        --bg-editor-focus: #132040;
+        --bg-format-bar: #132040;
+        --bg-code-block: #182a52;
+        --text-primary: #e9f0ff;
+        --text-secondary: #8a98b8;
+        --text-heading: #ffffff;
+        --text-heading-secondary: #9db4ff;
+        --text-toolbar: #050914;
+        --border-primary: #2a3658;
+        --border-secondary: #3d4d7e;
+        --border-heading: #222e4e;
+        --border-blockquote: #9db4ff;
+        --border-table: #2a3658;
+        --accent-blue: #7df9c2;
+        --accent-blue-hover: #55dba0;
+        --shadow-light: rgba(0, 0, 0, 0.5);
+        --shadow-medium: rgba(125, 249, 194, 0.2);
+      }
+
+      /* 018 — Bauhaus Komposition (off-white + red/blue/yellow) */
+      [data-theme="bauhaus-komposition"] {
+        --bg-primary: #f2ecdd;
+        --bg-secondary: #e0d6bd;
+        --bg-toolbar: #17161a;
+        --bg-editor: #faf6ea;
+        --bg-editor-focus: #fffdf4;
+        --bg-format-bar: #f2ecdd;
+        --bg-code-block: #e4d9bd;
+        --text-primary: #17161a;
+        --text-secondary: #55544e;
+        --text-heading: #17161a;
+        --text-heading-secondary: #2c2b30;
+        --text-toolbar: #f2ecdd;
+        --border-primary: #17161a;
+        --border-secondary: #55544e;
+        --border-heading: #c9bfa4;
+        --border-blockquote: #1e4f9e;
+        --border-table: #8a8578;
+        --accent-blue: #d8342b;
+        --accent-blue-hover: #a92620;
+        --shadow-light: rgba(23, 22, 26, 0.15);
+        --shadow-medium: rgba(23, 22, 26, 0.25);
+      }
+
+      /* 019 — Karesansui Garden (raked sand + stone + seal red) */
+      [data-theme="karesansui-garden"] {
+        --bg-primary: #e9dcc3;
+        --bg-secondary: #dccbab;
+        --bg-toolbar: #4e463d;
+        --bg-editor: #f4ebda;
+        --bg-editor-focus: #faf3e4;
+        --bg-format-bar: #efe3cc;
+        --bg-code-block: #dbc9a8;
+        --text-primary: #3a352e;
+        --text-secondary: #6b6257;
+        --text-heading: #2e2a24;
+        --text-heading-secondary: #4e463d;
+        --text-toolbar: #f4ebda;
+        --border-primary: #b8a888;
+        --border-secondary: #97876c;
+        --border-heading: #c4b498;
+        --border-blockquote: #5b544b;
+        --border-table: #b0a086;
+        --accent-blue: #a52e1c;
+        --accent-blue-hover: #832416;
+        --shadow-light: rgba(96, 74, 46, 0.2);
+        --shadow-medium: rgba(96, 74, 46, 0.32);
+      }
+
+      /* 020 — Signal Loss (seeded near-black + cyan/magenta tear) */
+      [data-theme="signal-loss"] {
+        --bg-primary: #12141c;
+        --bg-secondary: #08090d;
+        --bg-toolbar: #08090d;
+        --bg-editor: #151821;
+        --bg-editor-focus: #1b1f2b;
+        --bg-format-bar: #1b1f2b;
+        --bg-code-block: #232837;
+        --text-primary: #e8e6e2;
+        --text-secondary: #8a8a90;
+        --text-heading: #ffffff;
+        --text-heading-secondary: #c9c7c2;
+        --text-toolbar: #08090d;
+        --border-primary: #2e323e;
+        --border-secondary: #434857;
+        --border-heading: #262a35;
+        --border-blockquote: #ff3d9a;
+        --border-table: #2e323e;
+        --accent-blue: #3de9ff;
+        --accent-blue-hover: #25bcd1;
+        --shadow-light: rgba(0, 0, 0, 0.5);
+        --shadow-medium: rgba(61, 233, 255, 0.18);
       }

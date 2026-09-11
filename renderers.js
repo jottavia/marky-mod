@@ -1,10 +1,19 @@
 // Initialize Mermaid with theme support
+function getMermaidTheme(name) {
+  if (
+    typeof ThemeManager !== "undefined" &&
+    typeof ThemeManager.isDarkTheme === "function"
+  ) {
+    return ThemeManager.isDarkTheme(name) ? "dark" : "default";
+  }
+  return name === "dark" ? "dark" : "default";
+}
 const currentTheme =
   document.documentElement.getAttribute("data-theme") || "light";
 if (window.mermaid) {
   mermaid.initialize({
     startOnLoad: false,
-    theme: currentTheme === "dark" ? "dark" : "default",
+    theme: getMermaidTheme(currentTheme),
     securityLevel: "loose",
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
@@ -76,7 +85,7 @@ async function reRenderMermaidWithTheme(theme) {
   if (!window.mermaid) return;
   mermaid.initialize({
     startOnLoad: false,
-    theme: theme === "dark" ? "dark" : "default",
+    theme: getMermaidTheme(theme),
     securityLevel: "loose",
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',

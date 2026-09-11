@@ -103,13 +103,41 @@
         // Get saved preference
         const saved = localStorage.getItem("marky-theme");
 
+        var validThemes = [
+          "light",
+          "dark",
+          "aurora-glass",
+          "brutalist-manifesto",
+          "softdesk-neumorphic",
+          "kestrel-terminal",
+          "mercury-chrome",
+          "constellation",
+          "fog-editorial",
+          "halden-luxury",
+          "breathe-dawn",
+          "paper-valley-dusk",
+          "neon-drift",
+          "orbit-solar",
+          "sumi-ink",
+          "nocturne-sea",
+          "meridian-city",
+          "ether-smoke",
+          "pulse-heartbeat",
+          "bauhaus-komposition",
+          "karesansui-garden",
+          "signal-loss",
+        ];
+
         // Get system preference
         const systemPrefersDark =
           window.matchMedia &&
           window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-        // Determine theme
-        const theme = saved || (systemPrefersDark ? "dark" : "light");
+        // Determine theme (validate saved value against allow-list)
+        var theme = systemPrefersDark ? "dark" : "light";
+        if (saved && validThemes.indexOf(saved) !== -1) {
+          theme = saved;
+        }
 
         // Apply immediately
         document.documentElement.setAttribute("data-theme", theme);
@@ -276,6 +304,15 @@
             Clear
           </button>
           <div class="theme-toggle-container">
+            <select
+              id="themeSelect"
+              class="theme-select"
+              aria-label="Select color theme"
+              title="Select color theme (20 Fable themes + Light/Dark)"
+            >
+              <option value="light">Light (Default)</option>
+              <option value="dark">Dark</option>
+            </select>
             <a
               href="https://github.com/Tommertom/marky"
               target="_blank"
