@@ -2,11 +2,13 @@
 
 A powerful WYSIWYG markdown editor that runs entirely in your browser. No installation, no sign-up required!
 
-**The ultimate tool for collaborative document workflows.** Marky lets you create markdown documents and export them as **fully editable HTML files** that anyone can modify and return to you. Perfect for spec-driven AI development, stakeholder reviews, and collaborative editing - share HTML exports with colleagues who can edit and send back their changes as markdown.
+**The ultimate tool for collaborative document workflows.** Markey-Mod lets you create markdown documents and export them as **fully editable HTML files** that anyone can modify and return to you. Perfect for spec-driven AI development, stakeholder reviews, and collaborative editing - share HTML exports with colleagues who can edit and send back their changes as markdown.
 
 ## 🚀 Try It Now
 
-**[Launch Marky Editor](https://marky-md.web.app/)** - Start editing markdown instantly!
+**[Launch Markey-Mod Editor](https://jottavia.github.io/marky-mod/)** - Start editing markdown instantly!
+
+(Mirror: [marky-md.web.app](https://marky-md.web.app/))
 
 ## ✨ What You Can Do
 

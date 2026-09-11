@@ -78,7 +78,7 @@ check("theme parity (manager / html / css)", () => {
 check("html-export theme parity", () => {
   const exp = read("html-export.js");
   assert(
-    exp.includes('fetch("/theme-manager.js")'),
+    exp.includes('fetch("theme-manager.js")'),
     'export does not fetch /theme-manager.js',
   );
   assert(
@@ -92,7 +92,7 @@ check("html-export theme parity", () => {
     "export <html> does not carry the current data-theme",
   );
   assert(
-    exp.includes('fetch("/encrypt.js")'),
+    exp.includes('fetch("encrypt.js")'),
     'export does not fetch /encrypt.js',
   );
   assert(
@@ -102,7 +102,7 @@ check("html-export theme parity", () => {
   assert(exp.includes('id="encryptBtn"'), "export toolbar lacks #encryptBtn");
   assert(exp.includes('id="encryptBar"'), "export lacks #encryptBar panel");
   assert(
-    exp.includes('fetch("/real-crypto.js")'),
+    exp.includes('fetch("real-crypto.js")'),
     'export does not fetch /real-crypto.js',
   );
   assert(
@@ -115,7 +115,7 @@ check("html-export theme parity", () => {
   assert(exp.includes('id="rcDecryptBtn"'), "export lacks #rcDecryptBtn");
   assert(exp.includes('id="docxBtn"'), "export toolbar lacks #docxBtn");
   assert(
-    exp.includes('fetch("/docx-export.js")'),
+    exp.includes('fetch("docx-export.js")'),
     "export does not fetch /docx-export.js",
   );
   assert(
@@ -183,7 +183,7 @@ check("obfuscation toolkit", () => {
     assert(html.includes(id), `${id} missing from index.html`);
   }
   assert(
-    html.includes('<script src="/encrypt.js"></script>'),
+    html.includes('<script src="./encrypt.js"></script>'),
     "encrypt.js not loaded in index.html",
   );
   const css = read("app.css");
@@ -227,7 +227,7 @@ check("real encryption", () => {
     assert(exp.includes(id), `${id} missing from html-export.js`);
   }
   assert(
-    html.includes('<script src="/real-crypto.js"></script>'),
+    html.includes('<script src="./real-crypto.js"></script>'),
     "real-crypto.js not loaded in index.html",
   );
   const css = read("app.css");
@@ -270,11 +270,11 @@ check("page setup", () => {
     assert(exp.includes(id), `${id} missing from html-export.js`);
   }
   assert(
-    html.includes('<script src="/page-setup.js"></script>'),
+    html.includes('<script src="./page-setup.js"></script>'),
     "page-setup.js not loaded in index.html",
   );
   assert(
-    exp.includes('fetch("/page-setup.js")'),
+    exp.includes('fetch("page-setup.js")'),
     "export does not fetch /page-setup.js",
   );
   assert(
@@ -330,6 +330,40 @@ check("welcome copy", () => {
   assert(
     exp.includes("https://github.com/jottavia/marky-mod"),
     "export GitHub button does not point at the fork",
+  );
+});
+
+// 9. Portable paths: local assets use relative URLs so the app works from
+//    any base path (Firebase root, GitHub Pages /marky-mod/ subpath,
+//    localhost). No root-absolute local refs in page, export, manifest.
+check("portable paths", () => {
+  const html = read("index.html");
+  const exp = read("html-export.js");
+  const manifest = read("manifest.json");
+  const rootAbsolute = /((href|src)=["']\/|fetch\(["']\/|"src":\s*"\/"|"start_url":\s*"\/*\")/;
+  for (const [name, content] of [
+    ["index.html", html],
+    ["html-export.js", exp],
+    ["manifest.json", manifest],
+  ]) {
+    const m = content.match(rootAbsolute);
+    assert(!m, `${name} has root-absolute local ref: ${m && m[0]}`);
+  }
+  assert(
+    html.includes('href="./app.css"'),
+    "index.html does not load app.css relatively",
+  );
+  assert(
+    exp.includes('fetch("app.css")'),
+    "export does not fetch app.css relatively",
+  );
+  assert(
+    manifest.includes('"start_url": "./"'),
+    "manifest start_url is not relative",
+  );
+  assert(
+    fs.existsSync(path.join(root, ".nojekyll")),
+    ".nojekyll missing (needed for GitHub Pages)",
   );
 });
 
