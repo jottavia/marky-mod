@@ -518,6 +518,56 @@ check("dependency pins", () => {
   );
 });
 
+// 13. No upstream remnants: nothing deploys to, phones home to, or
+//     primarily links the original repo's infrastructure. Deliberate
+//     exceptions: the overt credit + labeled backup link (pinned by the
+//     welcome-copy check) and the MIT copyright notice (legally required).
+check("no upstream remnants", () => {
+  for (const f of [
+    ".github/workflows/deploy-firebase.yml",
+    ".firebaserc",
+    "firebase.json",
+  ]) {
+    assert(
+      !fs.existsSync(path.join(root, f)),
+      `${f} still present (upstream Firebase deployment)`,
+    );
+  }
+  const html = read("index.html");
+  for (const token of [
+    "gstatic.com/firebasejs",
+    "initializeApp",
+    "getAnalytics",
+    "firebaseapp.com",
+    "firebasestorage",
+    "measurementId",
+  ]) {
+    assert(!html.includes(token), `index.html still contains ${token}`);
+  }
+  const readme = read("README.md");
+  assert(
+    readme.includes(
+      "1. **Open the editor** - Visit [jottavia.github.io/marky-mod](https://jottavia.github.io/marky-mod/)",
+    ),
+    "README Quick Start does not point at the fork's Pages site",
+  );
+  assert(
+    readme.includes(
+      "**Ready to write?** [Launch Markey-Mod Editor Now →](https://jottavia.github.io/marky-mod/)",
+    ),
+    "README closing CTA does not point at the fork's Pages site",
+  );
+  assert(
+    !readme.includes("Launch Marky Editor"),
+    "README still has the old-brand launch CTA",
+  );
+  const license = read("LICENSE.md");
+  assert(
+    license.includes("Tommertom"),
+    "LICENSE.md lost the upstream copyright attribution (MIT requires it)",
+  );
+});
+
 if (failures.length > 0) {
   console.error(`\n${failures.length} check(s) failed.`);
   process.exit(1);

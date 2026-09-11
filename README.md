@@ -106,7 +106,7 @@ Make your workflow even faster:
 
 ## 🛠️ Quick Start Guide
 
-1. **Open the editor** - Visit [marky-md.web.app](https://marky-md.web.app/)
+1. **Open the editor** - Visit [jottavia.github.io/marky-mod](https://jottavia.github.io/marky-mod/)
 2. **Start typing** - Your content appears formatted in real-time
 3. **Select text** - Use the formatting toolbar for quick styling
 4. **Save your work** - Click "Download MD" or use Ctrl+S to export
@@ -154,4 +154,4 @@ Free and open source under the MIT License.
 
 ---
 
-**Ready to write?** [Launch Marky Editor Now →](https://marky-md.web.app/)
+**Ready to write?** [Launch Markey-Mod Editor Now →](https://jottavia.github.io/marky-mod/)
