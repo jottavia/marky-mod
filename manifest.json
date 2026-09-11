@@ -1,6 +1,6 @@
 {
-  "name": "Marky Markdown Editor",
-  "short_name": "Marky",
+  "name": "Markey-Mod Markdown Editor",
+  "short_name": "Markey-Mod",
   "description": "A powerful, privacy-focused WYSIWYG markdown editor that runs entirely in your browser",
   "start_url": "/",
   "display": "standalone",

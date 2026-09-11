@@ -232,7 +232,7 @@ window.addEventListener("load", () => {
   // Check if current editor content is the default welcome message
   const currentContent = editor.innerHTML.trim();
   const isCurrentContentDefault =
-    currentContent.includes("👋 Welcome to Marky") &&
+    currentContent.includes("👋 Welcome to Markey-Mod") &&
     currentContent.includes("Quick Start");
   const isCurrentContentEmpty =
     !currentContent ||

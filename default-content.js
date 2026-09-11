@@ -1,4 +1,4 @@
-const defaultContent = `<h1>👋 Welcome to Marky</h1>
+const defaultContent = `<h1>👋 Welcome to Markey-Mod</h1>
 <p>A simple markdown editor that runs in your browser. Start typing and see your formatted text in real-time!</p>
 <h2>✨ Quick Start</h2>
 <ul>
@@ -17,8 +17,8 @@ const defaultContent = `<h1>👋 Welcome to Marky</h1>
 <li><strong>Ctrl+Y</strong> or <strong>Ctrl+Shift+Z</strong> (Cmd+Shift+Z on Mac) - Redo</li>
 </ul>
 <h2>Latex and Mermaid Support - including docx export!</h2>
-<p>Marky supports rendering LaTeX math and Mermaid diagrams. You can include LaTeX using <code>$$...$$</code> for block math or <code>$...$</code> for inline math. Mermaid diagrams can be included using fenced code blocks with <code>mermaid</code> as the language.</p>
-<p>When exporting to docx, Marky will convert LaTeX and Mermaid diagrams into images, ensuring that your formatted content is preserved across platforms.</p>
+<p>Markey-Mod supports rendering LaTeX math and Mermaid diagrams. You can include LaTeX using <code>$$...$$</code> for block math or <code>$...$</code> for inline math. Mermaid diagrams can be included using fenced code blocks with <code>mermaid</code> as the language.</p>
+<p>When exporting to docx, Markey-Mod will convert LaTeX and Mermaid diagrams into images, ensuring that your formatted content is preserved across platforms.</p>
 <p>Sample Mermaid diagram:</p>
 <pre><code class="language-mermaid">graph TD;
     A-->B;
