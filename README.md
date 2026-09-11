@@ -138,7 +138,7 @@ Unlike other markdown editors:
 
 - **Pasted content is sanitized** (`sanitizer.js`): scripts, frames, forms, event handlers, `javascript:`/`vbscript:`/`data:` URL tricks (including entity/control-char obfuscation), inline styles, and `srcset` are stripped. Covered by 57 jsdom assertions (`npm test`).
 - **Real encryption is security-untested — use at own risk.** Only AES-GCM authenticates; the pure-JS ciphers use a fast non-iterated KDF, so use long, random passwords.
-- **Accepted risk (documented, not ignored):** `npm audit` flags `image-size` (ICNS/JXL/HEIF parsing loops) via `html-to-docx`. The only audit-sanctioned fix is downgrading `html-to-docx` 1.8.0 → 1.1.2, which would revert years of conversion fixes for a flaw reachable only by feeding hostile local image files to a local CLI tool. Rejected; the browser bundle never touches `image-size` (it uses the `docx` CDN library).
+- **Accepted risk (documented, not ignored):** `npm audit` flags `image-size` (ICNS/JXL/HEIF parsing loops) via `html-to-docx`. The only audit-sanctioned fix is downgrading `html-to-docx` 1.8.0 → 1.1.2, which would revert years of conversion fixes — rejected. Instead `md-to-docx.js` pre-screens every image by magic bytes (`image-guard.js`, unit-tested) and removes those formats before the library ever sees them, so the vulnerable parsers are unreachable. The browser bundle never touches `image-size` (it uses the `docx` CDN library).
 
 ## 🤝 For Developers
 

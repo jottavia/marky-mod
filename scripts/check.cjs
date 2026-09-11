@@ -469,6 +469,28 @@ check("seo", () => {
   );
 });
 
+// 12. Image guard: the md-to-docx pipeline pre-screens the image-size
+//     infinite-loop formats instead of downgrading html-to-docx.
+check("image guard", () => {
+  const guard = read("image-guard.js");
+  for (const token of ["icns", "jxl", "heif", "ftyp", "extToMime"]) {
+    assert(guard.includes(token), `image-guard.js missing ${token}`);
+  }
+  const conv = read("md-to-docx.js");
+  assert(
+    conv.includes('from "./image-guard.js"'),
+    "md-to-docx.js does not use image-guard.js",
+  );
+  assert(
+    conv.includes("sanitizeImages("),
+    "md-to-docx.js does not pre-screen images",
+  );
+  assert(
+    fs.existsSync(path.join(root, "scripts", "test-image-guard.cjs")),
+    "scripts/test-image-guard.cjs missing",
+  );
+});
+
 // 11. Dependency pins: the browser markdown-it CDN build matches the
 //     package.json major in both index.html and the export template,
 //     so audit fixes apply everywhere the library runs.

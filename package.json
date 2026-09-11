@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/check.cjs",
-    "test": "node scripts/test-sanitizer.cjs",
+    "test": "node scripts/test-sanitizer.cjs && node scripts/test-image-guard.cjs",
     "convert": "node md-to-docx.js",
     "serve": "npx http-server -S -C certs/cert.pem -K certs/key.pem -p 8443 ."
   },

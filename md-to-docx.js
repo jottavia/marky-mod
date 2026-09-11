@@ -17,6 +17,7 @@ import fs from "fs";
 import path from "path";
 import MarkdownIt from "markdown-it";
 import HTMLtoDOCX from "html-to-docx";
+import { blockedImageFormat, classifyDataUrl, extToMime } from "./image-guard.js";
 
 // Initialize markdown-it with default options (same as index.html)
 const md = new MarkdownIt();
@@ -152,6 +153,149 @@ ${htmlContent}
  * @param {string} markdown - The markdown content
  * @returns {string} The title or default
  */
+/**
+ * Fetch only the leading bytes of a remote image (enough for magic-byte
+ * classification), with a timeout. Returns null when unavailable.
+ */
+async function fetchFirstBytes(url, n = 64, timeoutMs = 15000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok || !res.body) return null;
+    const reader = res.body.getReader();
+    const { value } = await reader.read();
+    await reader.cancel().catch(() => {});
+    return value ? value.slice(0, n) : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
+ * Read only the leading bytes of a local file. Returns null when unreadable.
+ */
+function readFirstBytes(filePath, n = 64) {
+  try {
+    const fd = fs.openSync(filePath, "r");
+    const buf = Buffer.alloc(n);
+    const read = fs.readSync(fd, buf, 0, n, 0);
+    fs.closeSync(fd);
+    return read > 0 ? buf.slice(0, read) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Pre-screen <img> sources for formats whose parsers loop forever in the
+ * bundled image-size (ICNS, JPEG-XL, HEIF family — see image-guard.js).
+ * Blocked images are replaced with a text placeholder so html-to-docx
+ * never receives those bytes. Safe local files are embedded as data:
+ * URLs because html-to-docx crashes on filesystem paths and file://
+ * URLs (pre-existing limitation); missing files become placeholders
+ * instead of crashing the conversion. Anything uninspectable passes
+ * through with a warning (fail-open for availability, same as before).
+ */
+async function sanitizeImages(htmlContent, baseDir) {
+  const warnings = [];
+  const imgRe = /<img\b[^>]*?\bsrc\s*=\s*(["'])(.*?)\1/gis;
+  const matches = [...htmlContent.matchAll(imgRe)];
+  if (matches.length === 0) return { html: htmlContent, warnings };
+
+  const replacements = [];
+  for (const m of matches) {
+    const src = m[2];
+    const tag = m[0];
+    const setSrc = (newSrc) => {
+      const attr = /src\s*=\s*(['"])/i.exec(tag);
+      const start = attr.index + attr[0].length;
+      return tag.slice(0, start) + newSrc + tag.slice(start + src.length);
+    };
+    const dropTag = (text) => ({ drop: true, text });
+    const keepTag = () => ({ drop: false });
+
+    if (/^data:/i.test(src)) {
+      const r = classifyDataUrl(src);
+      if (r.format) {
+        warnings.push(`Image omitted (${r.format.toUpperCase()} not supported)`);
+        replacements.push({ match: m, ...dropTag(
+          `[Image omitted: ${r.format.toUpperCase()} images are not supported for DOCX conversion]`) });
+      } else {
+        if (r.undecodable) warnings.push(`Image could not be inspected, passing through: ${src.slice(0, 80)}`);
+        replacements.push({ match: m, ...keepTag() });
+      }
+    } else if (/^https?:\/\//i.test(src)) {
+      const bytes = await fetchFirstBytes(src);
+      if (bytes && bytes.length >= 4 && blockedImageFormat(bytes)) {
+        const format = blockedImageFormat(bytes);
+        warnings.push(`Image omitted (${format.toUpperCase()} not supported): ${src.slice(0, 80)}`);
+        replacements.push({ match: m, ...dropTag(
+          `[Image omitted: ${format.toUpperCase()} images are not supported for DOCX conversion]`) });
+      } else {
+        if (!bytes) warnings.push(`Image could not be inspected, passing through: ${src.slice(0, 80)}`);
+        replacements.push({ match: m, ...keepTag() });
+      }
+    } else {
+      // Local file (relative, absolute, or file://) or unknown scheme.
+      // NOTE: Windows drive-letter paths (C:\...) resemble URL schemes,
+      // so absolute-path detection runs before the scheme test.
+      let filePath = null;
+      const fileMatch = /^file:\/\//i.test(src)
+        ? src.replace(/^file:\/\//i, "").replace(/^\/([A-Za-z]:\/)/, "$1")
+        : src;
+      const clean = fileMatch.split(/[?#]/)[0];
+      if (/^file:\/\//i.test(src) || path.isAbsolute(clean)) {
+        try {
+          filePath = decodeURIComponent(clean);
+        } catch {
+          filePath = clean;
+        }
+      } else if (/^[a-z][a-z0-9+.-]*:/i.test(src)) {
+        warnings.push(`Image omitted (unsupported URL scheme): ${src.slice(0, 80)}`);
+        replacements.push({ match: m, ...dropTag("[Image omitted: unsupported URL scheme]") });
+        continue;
+      } else {
+        try {
+          filePath = path.join(baseDir, decodeURIComponent(clean));
+        } catch {
+          filePath = null;
+        }
+      }
+      const bytes = filePath ? readFirstBytes(filePath, 65536) : null;
+      if (!bytes) {
+        warnings.push(`Image file not found, omitting: ${src.slice(0, 80)}`);
+        replacements.push({ match: m, ...dropTag(`[Image missing: ${src.slice(0, 80)}]`) });
+        continue;
+      }
+      const format = bytes.length >= 4 ? blockedImageFormat(bytes) : null;
+      if (format) {
+        warnings.push(`Image omitted (${format.toUpperCase()} not supported): ${src.slice(0, 80)}`);
+        replacements.push({ match: m, ...dropTag(
+          `[Image omitted: ${format.toUpperCase()} images are not supported for DOCX conversion]`) });
+        continue;
+      }
+      const mime = extToMime(clean) || "application/octet-stream";
+      const full = fs.readFileSync(filePath);
+      replacements.push({
+        match: m,
+        drop: false,
+        tag: setSrc(`data:${mime};base64,${full.toString("base64")}`),
+      });
+    }
+  }
+
+  let html = htmlContent;
+  for (let i = replacements.length - 1; i >= 0; i--) {
+    const { match: m, drop, text, tag } = replacements[i];
+    const replacement = drop ? text : tag || m[0];
+    html = html.slice(0, m.index) + replacement + html.slice(m.index + m[0].length);
+  }
+  return { html, warnings };
+}
+
 function extractTitle(markdown) {
   const match = markdown.match(/^#\s+(.+)$/m);
   return match ? match[1].trim() : "Document";
@@ -181,7 +325,15 @@ async function convertMdToDocx(inputPath, outputPath) {
 
     // Convert markdown to HTML using markdown-it (same as index.html)
     console.log("Converting markdown to HTML...");
-    const htmlContent = md.render(markdown);
+    const rawHtml = md.render(markdown);
+
+    // Pre-screen images for formats with known-infinite-loop parsers
+    // before html-to-docx (bundled image-size) ever sees them.
+    const { html: htmlContent, warnings } = await sanitizeImages(
+      rawHtml,
+      path.dirname(inputPath),
+    );
+    for (const w of warnings) console.log(`[guard] ${w}`);
 
     // Generate complete styled HTML document
     const fullHtml = generateStyledHTML(htmlContent, title);
