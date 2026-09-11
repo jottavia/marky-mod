@@ -109,44 +109,53 @@
         top: 0;
         background: var(--bg-toolbar);
         color: var(--text-toolbar);
-        padding: 0.55rem 1rem;
+        padding: 0.3rem 0.6rem;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+        overflow-x: auto;
+        white-space: nowrap;
         box-shadow: 0 2px 5px var(--shadow-light);
         z-index: 100;
       }
 
       .toolbar h1 {
-        font-size: 1.05rem;
-        font-weight: 500;
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+        margin-right: 0.25rem;
       }
 
       .buttons {
         display: flex;
-        gap: 0.3rem;
+        gap: 0.25rem;
         align-items: center;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        flex-shrink: 0;
       }
 
       button {
         background: var(--accent-blue);
         color: var(--text-toolbar);
         border: none;
-        padding: 0.3rem 0.55rem;
+        padding: 0.35rem 0.6rem;
         border-radius: 3px;
         cursor: pointer;
-        font-size: 0.72rem;
+        font-size: 0.78rem;
         line-height: 1.2;
         display: inline-flex;
         align-items: center;
         gap: 0.3rem;
         white-space: nowrap;
+        flex-shrink: 0;
       }
 
       .buttons button svg {
-        width: 13px;
-        height: 13px;
+        width: 14px;
+        height: 14px;
         flex-shrink: 0;
       }
 
@@ -208,9 +217,10 @@
 
       .theme-toggle-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
-        gap: 0.25rem;
+        gap: 0.35rem;
+        flex-shrink: 0;
       }
 
       .theme-toggle {
@@ -489,35 +499,38 @@
         }
 
         .toolbar {
-          padding: 0.5rem 0.75rem;
-          flex-direction: column;
-          gap: 0.5rem;
-          align-items: stretch;
+          padding: 0.3rem 0.5rem;
+          flex-direction: row;
+          gap: 0.4rem;
+          align-items: center;
+          overflow-x: auto;
         }
 
         .toolbar h1 {
-          font-size: 0.95rem;
-          text-align: center;
+          font-size: 0.8rem;
+          text-align: left;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
 
         .buttons {
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 0.25rem;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          gap: 0.22rem;
         }
 
         button {
-          padding: 0.25rem 0.45rem;
-          font-size: 0.68rem;
+          padding: 0.3rem 0.5rem;
+          font-size: 0.72rem;
           gap: 0.25rem;
-          flex: 1 1 auto;
+          flex: 0 0 auto;
           min-width: fit-content;
-          max-width: 110px;
+          max-width: none;
         }
 
         button svg {
-          width: 12px;
-          height: 12px;
+          width: 13px;
+          height: 13px;
         }
 
         #clearBtn {
@@ -571,7 +584,7 @@
 
       @media (max-width: 480px) {
         .toolbar h1 {
-          font-size: 0.85rem;
+          font-size: 0.75rem;
         }
 
         button {
@@ -580,12 +593,18 @@
           min-width: 30px;
           max-width: 38px;
           justify-content: center;
+          flex: 0 0 auto;
         }
 
         button svg {
-          width: 13px;
-          height: 13px;
+          width: 14px;
+          height: 14px;
           margin: 0;
+        }
+
+        .theme-select {
+          max-width: 96px;
+          font-size: 0.65rem;
         }
 
         #editor {
