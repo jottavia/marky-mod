@@ -17,6 +17,7 @@ exportBtn.addEventListener("click", async () => {
     const [
       cssRes,
       defaultContentRes,
+      sanitizerRes,
       appRes,
       renderersRes,
       themeManagerRes,
@@ -30,6 +31,7 @@ exportBtn.addEventListener("click", async () => {
     ] = await Promise.all([
       fetch("app.css"),
       fetch("default-content.js"),
+      fetch("sanitizer.js"),
       fetch("app.js"),
       fetch("renderers.js"),
       fetch("theme-manager.js"),
@@ -45,6 +47,7 @@ exportBtn.addEventListener("click", async () => {
     // Concatenate in correct dependency order: default-content first, then app.js (defines globals), then features
     jsContent = [
       await defaultContentRes.text(),
+      await sanitizerRes.text(),
       await appRes.text(),
       await renderersRes.text(),
       await themeManagerRes.text(),

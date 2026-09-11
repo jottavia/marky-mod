@@ -6,17 +6,21 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/check.cjs",
+    "test": "node scripts/test-sanitizer.cjs",
     "convert": "node md-to-docx.js",
     "serve": "npx http-server -S -C certs/cert.pem -K certs/key.pem -p 8443 ."
   },
   "dependencies": {
-    "markdown-it": "^13.0.1",
-    "html-to-docx": "^1.8.0"
+    "html-to-docx": "^1.8.0",
+    "markdown-it": "^13.0.1"
   },
   "keywords": [
     "markdown",
     "docx",
     "converter"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
 }

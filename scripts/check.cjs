@@ -27,6 +27,7 @@ const read = (f) => fs.readFileSync(path.join(root, f), "utf8");
 check("node --check on JS files", () => {
   const files = [
     "app.js",
+    "sanitizer.js",
     "renderers.js",
     "theme-manager.js",
     "format-bar.js",
@@ -132,17 +133,53 @@ check("html-export theme parity", () => {
   );
 });
 
-// 4. Paste sanitizer present and wired into the paste handler.
+// 4. Paste sanitizer lives in sanitizer.js, is wired into the paste
+//    handler, loaded by the page and the export, and covers the known
+//    bypass classes (run `npm test` for behavioral proof).
 check("paste sanitizer", () => {
+  const san = read("sanitizer.js");
   const app = read("app.js");
-  assert(/function sanitizePastedHtml/.test(app), "sanitizePastedHtml missing");
+  const html = read("index.html");
+  const exp = read("html-export.js");
+  assert(
+    /function sanitizePastedHtml/.test(san),
+    "sanitizePastedHtml missing from sanitizer.js",
+  );
+  assert(
+    !/function sanitizePastedHtml/.test(app),
+    "stale sanitizePastedHtml copy still in app.js",
+  );
   assert(
     /sanitizePastedHtml\(html\)/.test(app),
     "paste handler does not use sanitizePastedHtml",
   );
-  for (const token of ["script", "startsWith(\"on\")", "javascript:"]) {
-    assert(app.includes(token), `sanitizer does not handle ${token}`);
+  for (const token of [
+    "x00-\\x20",
+    "vbscript",
+    "data:",
+    'name === "style"',
+    "srcset",
+    "formaction",
+    "background",
+  ]) {
+    assert(san.includes(token), `sanitizer does not handle ${token}`);
   }
+  assert(
+    html.includes('<script src="./sanitizer.js"></script>'),
+    "sanitizer.js not loaded in index.html",
+  );
+  assert(
+    exp.includes('fetch("sanitizer.js")'),
+    "export does not fetch sanitizer.js",
+  );
+  assert(
+    /await sanitizerRes\.text\(\)/.test(exp),
+    "export does not embed sanitizer.js content",
+  );
+  assert(
+    fs.existsSync(path.join(root, "scripts", "test-sanitizer.cjs")),
+    "scripts/test-sanitizer.cjs missing",
+  );
 });
 
 // 5. Obfuscation toolkit: all methods present, disclaimer present,
