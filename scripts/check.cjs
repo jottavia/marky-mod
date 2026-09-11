@@ -113,6 +113,23 @@ check("html-export theme parity", () => {
   assert(exp.includes('id="rcPassword"'), "export lacks #rcPassword");
   assert(exp.includes('id="rcEncryptBtn"'), "export lacks #rcEncryptBtn");
   assert(exp.includes('id="rcDecryptBtn"'), "export lacks #rcDecryptBtn");
+  assert(exp.includes('id="docxBtn"'), "export toolbar lacks #docxBtn");
+  assert(
+    exp.includes('fetch("/docx-export.js")'),
+    "export does not fetch /docx-export.js",
+  );
+  assert(
+    /await docxExportRes\.text\(\)/.test(exp),
+    "export does not embed docx-export.js content",
+  );
+  assert(
+    exp.includes("unpkg.com/docx@7.1.0"),
+    "export lacks docx CDN script",
+  );
+  assert(
+    exp.includes("FileSaver.js/2.0.5/FileSaver.min.js"),
+    "export lacks FileSaver CDN script",
+  );
 });
 
 // 4. Paste sanitizer present and wired into the paste handler.

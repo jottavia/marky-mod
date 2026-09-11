@@ -25,6 +25,7 @@ exportBtn.addEventListener("click", async () => {
       encryptRes,
       realCryptoRes,
       pageSetupRes,
+      docxExportRes,
       htmlExportRes,
     ] = await Promise.all([
       fetch("/app.css"),
@@ -37,6 +38,7 @@ exportBtn.addEventListener("click", async () => {
       fetch("/encrypt.js"),
       fetch("/real-crypto.js"),
       fetch("/page-setup.js"),
+      fetch("/docx-export.js"),
       fetch("/html-export.js"),
     ]);
     cssContent = await cssRes.text();
@@ -51,6 +53,7 @@ exportBtn.addEventListener("click", async () => {
       await encryptRes.text(),
       await realCryptoRes.text(),
       await pageSetupRes.text(),
+      await docxExportRes.text(),
       await htmlExportRes.text(),
     ].join("\n\n");
   } catch (err) {
@@ -111,6 +114,15 @@ ${cssContent}
                     </svg>
                     <span class="btn-text">PDF</span>
                     <span class="loading-indicator" style="display:none">⏳</span>
+                </button>
+                <button id="docxBtn" title="Export as Word document (.docx)" aria-label="Export document as DOCX">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <path d="M9 15l2 2 4-4"></path>
+                    </svg>
+                    <span class="docx-btn-text">DOCX</span>
+                    <span class="docx-loading-indicator" style="display:none">⏳</span>
                 </button>
                 <button id="downloadBtn" title="Download as markdown (Ctrl+S)">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -264,6 +276,8 @@ ${cssContent}
     ${needsMermaid ? '<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"><\\/script>' : ""}
     ${needsMathJax ? '<script>window.MathJax={tex:{inlineMath:[["$","$"],["\\\\(","\\\\)"]],displayMath:[["$$","$$"],["\\\\[","\\\\]"]]},options:{skipHtmlTags:["script","noscript","style","textarea","pre","code"],ignoreHtmlClass:"mermaid-wrapper"}};<\\/script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"><\\/script>' : ""}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>
+    <script src="https://unpkg.com/docx@7.1.0/build/index.js"><\/script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"><\/script>
     <script id="app-script">
 ${jsContent}
     <\/script>
