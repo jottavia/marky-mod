@@ -30,6 +30,7 @@ check("node --check on JS files", () => {
     "renderers.js",
     "theme-manager.js",
     "format-bar.js",
+    "encrypt.js",
     "html-export.js",
     "pdf-export.js",
     "docx-export.js",
@@ -88,6 +89,16 @@ check("html-export theme parity", () => {
     exp.includes('data-theme="${currentTheme}"'),
     "export <html> does not carry the current data-theme",
   );
+  assert(
+    exp.includes('fetch("/encrypt.js")'),
+    'export does not fetch /encrypt.js',
+  );
+  assert(
+    /await encryptRes\.text\(\)/.test(exp),
+    "export does not embed encrypt.js content",
+  );
+  assert(exp.includes('id="encryptBtn"'), "export toolbar lacks #encryptBtn");
+  assert(exp.includes('id="encryptBar"'), "export lacks #encryptBar panel");
 });
 
 // 4. Paste sanitizer present and wired into the paste handler.
@@ -101,6 +112,51 @@ check("paste sanitizer", () => {
   for (const token of ["script", "startsWith(\"on\")", "javascript:"]) {
     assert(app.includes(token), `sanitizer does not handle ${token}`);
   }
+});
+
+// 5. Obfuscation toolkit: all methods present, disclaimer present,
+//    panel wired into index.html with matching IDs.
+check("obfuscation toolkit", () => {
+  const enc = read("encrypt.js");
+  const html = read("index.html");
+  for (const m of [
+    "rot13",
+    "rot47",
+    "caesar",
+    "atbash",
+    "reverse",
+    "base64",
+    "hex",
+    "binary",
+    "url",
+    "leet",
+  ]) {
+    assert(
+      enc.includes(`${m}:`) || enc.includes(`function ${m}`),
+      `obfuscation method "${m}" missing from encrypt.js`,
+    );
+  }
+  assert(
+    /NOT secure encryption/.test(enc),
+    "security disclaimer missing from encrypt.js",
+  );
+  for (const id of [
+    'id="encryptBtn"',
+    'id="encryptBar"',
+    'id="encryptMethod"',
+    'id="encryptMode"',
+    'id="caesarShift"',
+    'id="encryptApply"',
+    'id="encryptClose"',
+  ]) {
+    assert(html.includes(id), `${id} missing from index.html`);
+  }
+  assert(
+    html.includes('<script src="/encrypt.js"></script>'),
+    "encrypt.js not loaded in index.html",
+  );
+  const css = read("app.css");
+  assert(css.includes(".encrypt-bar"), ".encrypt-bar styles missing from app.css");
 });
 
 if (failures.length > 0) {

@@ -22,6 +22,7 @@ exportBtn.addEventListener("click", async () => {
       themeManagerRes,
       pdfRes,
       formatBarRes,
+      encryptRes,
       htmlExportRes,
     ] = await Promise.all([
       fetch("/app.css"),
@@ -31,6 +32,7 @@ exportBtn.addEventListener("click", async () => {
       fetch("/theme-manager.js"),
       fetch("/pdf-export.js"),
       fetch("/format-bar.js"),
+      fetch("/encrypt.js"),
       fetch("/html-export.js"),
     ]);
     cssContent = await cssRes.text();
@@ -42,6 +44,7 @@ exportBtn.addEventListener("click", async () => {
       await themeManagerRes.text(),
       await pdfRes.text(),
       await formatBarRes.text(),
+      await encryptRes.text(),
       await htmlExportRes.text(),
     ].join("\n\n");
   } catch (err) {
@@ -127,6 +130,13 @@ ${cssContent}
                     </svg>
                     Clear
                 </button>
+                <button id="encryptBtn" title="Obfuscate text (not secure encryption)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Obfuscate
+                </button>
                 <div class="theme-toggle-container">
                     <select id="themeSelect" class="theme-select" aria-label="Select color theme" title="Select color theme">
                     </select>
@@ -140,6 +150,20 @@ ${cssContent}
                     </svg>
                 </a>
             </div>
+        </div>
+        
+        <div id="encryptBar" class="encrypt-bar" aria-label="Text obfuscation panel">
+            <span class="encrypt-title">Obfuscate</span>
+            <select id="encryptMethod" class="theme-select" aria-label="Obfuscation method"></select>
+            <select id="encryptMode" class="theme-select" aria-label="Encode or decode">
+                <option value="encode">Encode</option>
+                <option value="decode">Decode</option>
+            </select>
+            <label id="caesarShiftLabel" for="caesarShift">Shift</label>
+            <input id="caesarShift" type="number" min="1" max="25" value="3" aria-label="Caesar cipher shift">
+            <button id="encryptApply" title="Apply to selection, or whole document if nothing is selected">Apply</button>
+            <button id="encryptClose" title="Close obfuscation panel">Close</button>
+            <span class="encrypt-note">Applies to selection (or whole document). Obfuscation only — not secure encryption. Leet decode is approximate.</span>
         </div>
         
         <div id="formatBar" class="format-bar">

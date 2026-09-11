@@ -275,6 +275,43 @@
         outline-offset: 1px;
       }
 
+      .encrypt-bar {
+        display: none;
+        gap: 0.4rem;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 0.35rem 0.75rem;
+        background: var(--bg-format-bar);
+        border-bottom: 1px solid var(--border-primary);
+        font-size: 0.75rem;
+        color: var(--text-primary);
+      }
+
+      .encrypt-bar.visible {
+        display: flex;
+      }
+
+      .encrypt-title {
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .encrypt-bar input[type="number"] {
+        width: 3rem;
+        background: var(--bg-editor);
+        color: var(--text-primary);
+        border: 1px solid var(--border-secondary);
+        border-radius: 3px;
+        padding: 0.2rem 0.3rem;
+        font-size: 0.72rem;
+      }
+
+      .encrypt-note {
+        color: var(--text-secondary);
+        font-style: italic;
+        font-size: 0.7rem;
+      }
+
       #editor {
         padding: 2rem;
         min-height: calc(100vh - 80px);
