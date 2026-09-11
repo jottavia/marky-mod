@@ -12,7 +12,7 @@ A powerful WYSIWYG markdown editor that runs entirely in your browser. No instal
 
 ## 🙏 Credits
 
-Markey-Mod is a fork of **[Marky by Tommertom](https://github.com/Tommertom/marky)**. Credit is due: the original WYSIWYG editor, its offline-first design, and the editable-HTML workflow are upstream's work. This fork adds 22 themes, text obfuscation, password-based encryption, page setup for PDF/DOCX, DOCX in HTML exports.
+Markey-Mod is a fork of **[Marky by Tommertom](https://github.com/Tommertom/marky)**. Credit is due: the original WYSIWYG editor, its offline-first design, and the editable-HTML workflow are upstream's work. This fork adds 22 themes, text obfuscation, password-based encryption, page setup for PDF/DOCX, DOCX in HTML exports, GitHub Pages hosting, and SEO.
 
 ## ✨ What You Can Do
 
@@ -133,6 +133,12 @@ Unlike other markdown editors:
 - Select text, then **Obfuscate** for ciphers or **Encrypt** (with a password) for real encryption; decrypt `MK2$...` envelopes with the same password
 - Click **Page** to set paper size and margins before exporting PDF/DOCX
 - **Collaborative HTML Workflow**: Export as HTML and share with colleagues. They can open it in any browser, edit the content directly, save their changes, and send the modified HTML back to you. You can then extract their changes as markdown!
+
+## 🔒 Security notes
+
+- **Pasted content is sanitized** (`sanitizer.js`): scripts, frames, forms, event handlers, `javascript:`/`vbscript:`/`data:` URL tricks (including entity/control-char obfuscation), inline styles, and `srcset` are stripped. Covered by 57 jsdom assertions (`npm test`).
+- **Real encryption is security-untested — use at own risk.** Only AES-GCM authenticates; the pure-JS ciphers use a fast non-iterated KDF, so use long, random passwords.
+- **Accepted risk (documented, not ignored):** `npm audit` flags `image-size` (ICNS/JXL/HEIF parsing loops) via `html-to-docx`. The only audit-sanctioned fix is downgrading `html-to-docx` 1.8.0 → 1.1.2, which would revert years of conversion fixes for a flaw reachable only by feeding hostile local image files to a local CLI tool. Rejected; the browser bundle never touches `image-size` (it uses the `docx` CDN library).
 
 ## 🤝 For Developers
 

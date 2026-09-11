@@ -469,6 +469,33 @@ check("seo", () => {
   );
 });
 
+// 11. Dependency pins: the browser markdown-it CDN build matches the
+//     package.json major in both index.html and the export template,
+//     so audit fixes apply everywhere the library runs.
+check("dependency pins", () => {
+  const pkg = JSON.parse(read("package.json"));
+  const range = pkg.dependencies["markdown-it"];
+  const major = range.match(/(\d+)/)[1];
+  const html = read("index.html");
+  const exp = read("html-export.js");
+  const pin = (src, name) => {
+    const m = src.match(/markdown-it@(\d+\.\d+\.\d+)\/dist\/([^"']+)/);
+    assert(m, `markdown-it CDN pin not found in ${name}`);
+    assert(
+      m[1].startsWith(major + "."),
+      `${name} markdown-it ${m[1]} does not match package major ${major}`,
+    );
+    return m[1];
+  };
+  const vHtml = pin(html, "index.html");
+  const vExp = pin(exp, "html-export.js");
+  assert(vHtml === vExp, `CDN pins differ: ${vHtml} vs ${vExp}`);
+  assert(
+    html.includes("dist/browser/markdown-it.umd.min.js"),
+    "index.html does not use the v15 UMD browser bundle path",
+  );
+});
+
 if (failures.length > 0) {
   console.error(`\n${failures.length} check(s) failed.`);
   process.exit(1);
