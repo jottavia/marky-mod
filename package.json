@@ -10,8 +10,10 @@
     "serve": "npx http-server -S -C certs/cert.pem -K certs/key.pem -p 8443 ."
   },
   "dependencies": {
-    "markdown-it": "^13.0.1",
-    "html-to-docx": "^1.8.0"
+    "dompurify": "^3.4.15",
+    "html-to-docx": "^1.1.2",
+    "jsdom": "^29.1.1",
+    "markdown-it": "^15.0.2"
   },
   "keywords": [
     "markdown",
