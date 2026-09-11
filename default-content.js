@@ -39,5 +39,7 @@ $$\\mathbb{N} = \\{ a \\in \\mathbb{Z} : a > 0 \\}$$
 </ul>
 <h2>🔄 Collaborative Workflow</h2>
 <p>Export as HTML or DOCX to share editable documents. Recipients can open the files in any browser or Word, make their edits, and send them back to you. No markdown knowledge required! All editing happens locally - no data sent to servers.</p>
+<h2>🙏 Credits</h2>
+<p>Markey-Mod is a fork of <a href="https://github.com/Tommertom/marky">Marky by Tommertom</a> — credit for the original editor belongs upstream. The original project's live site is kept only as a <a href="https://marky-md.web.app/">backup</a>.</p>
 <p><strong>Ready to write?</strong> Click "Clear" to start with a blank document, or just start typing!</p>
 `;

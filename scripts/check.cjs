@@ -331,6 +331,28 @@ check("welcome copy", () => {
     exp.includes("https://github.com/jottavia/marky-mod"),
     "export GitHub button does not point at the fork",
   );
+  // Overt upstream credit + old site labeled as backup, not original.
+  const readme = read("README.md");
+  assert(
+    readme.includes("https://github.com/Tommertom/marky"),
+    "README does not credit the original project",
+  );
+  assert(
+    /[Bb]ackup/.test(readme) && readme.includes("https://marky-md.web.app/"),
+    "README does not mark the old site as a backup",
+  );
+  assert(
+    dc.includes("https://github.com/Tommertom/marky"),
+    "welcome doc does not credit the original project",
+  );
+  assert(
+    dc.includes("https://marky-md.web.app/"),
+    "welcome doc lacks the backup link",
+  );
+  assert(
+    html.includes("https://github.com/Tommertom/marky"),
+    "index.html static block lacks original-project credit",
+  );
 });
 
 // 9. Portable paths: local assets use relative URLs so the app works from

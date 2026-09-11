@@ -8,7 +8,11 @@ A powerful WYSIWYG markdown editor that runs entirely in your browser. No instal
 
 **[Launch Markey-Mod Editor](https://jottavia.github.io/marky-mod/)** - Start editing markdown instantly!
 
-(Mirror: [marky-md.web.app](https://marky-md.web.app/))
+**Backup site:** [marky-md.web.app](https://marky-md.web.app/) — the original upstream project's deployment, kept here only as a fallback mirror.
+
+## 🙏 Credits
+
+Markey-Mod is a fork of **[Marky by Tommertom](https://github.com/Tommertom/marky)**. Overt credit where due: the original WYSIWYG editor, its offline-first design, and the editable-HTML workflow are upstream's work. This fork adds 22 themes, text obfuscation, password-based encryption, page setup for PDF/DOCX, DOCX in HTML exports, GitHub Pages hosting, and SEO.
 
 ## ✨ What You Can Do
 
