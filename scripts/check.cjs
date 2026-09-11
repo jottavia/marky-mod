@@ -367,6 +367,49 @@ check("portable paths", () => {
   );
 });
 
+// 10. SEO: canonical/social/structured-data URLs all point at the Pages
+//     URL, robots.txt + sitemap.xml exist and agree.
+check("seo", () => {
+  const SITE = "https://jottavia.github.io/marky-mod/";
+  const html = read("index.html");
+  const head = html.slice(0, html.indexOf("</head>"));
+  assert(
+    head.includes(`<link rel="canonical" href="${SITE}"`),
+    "canonical does not point at the Pages URL",
+  );
+  for (const tag of [
+    `property="og:url" content="${SITE}"`,
+    `name="twitter:url" content="${SITE}"`,
+    `"url": "${SITE}"`,
+    `${SITE}favicon-512x512.png`,
+  ]) {
+    assert(head.includes(tag), `head metadata missing ${tag}`);
+  }
+  assert(
+    !head.includes("marky-md.web.app"),
+    "head metadata still references the old deployment URL",
+  );
+  assert(
+    head.includes('property="og:image"'),
+    "og:image missing from head",
+  );
+  assert(
+    head.includes('name="twitter:image"'),
+    "twitter:image missing from head",
+  );
+  const robots = read("robots.txt");
+  assert(robots.includes("Allow: /"), "robots.txt does not allow crawling");
+  assert(
+    robots.includes(`${SITE}sitemap.xml`),
+    "robots.txt does not reference the sitemap",
+  );
+  const sitemap = read("sitemap.xml");
+  assert(
+    sitemap.includes(`<loc>${SITE}</loc>`),
+    "sitemap.xml does not list the Pages URL",
+  );
+});
+
 if (failures.length > 0) {
   console.error(`\n${failures.length} check(s) failed.`);
   process.exit(1);

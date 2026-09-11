@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jottavia.github.io/marky-mod/sitemap.xml
