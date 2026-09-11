@@ -12,7 +12,7 @@ A powerful WYSIWYG markdown editor that runs entirely in your browser. No instal
 
 ## 🙏 Credits
 
-Markey-Mod is a fork of **[Marky by Tommertom](https://github.com/Tommertom/marky)**. Overt credit where due: the original WYSIWYG editor, its offline-first design, and the editable-HTML workflow are upstream's work. This fork adds 22 themes, text obfuscation, password-based encryption, page setup for PDF/DOCX, DOCX in HTML exports, GitHub Pages hosting, and SEO.
+Markey-Mod is a fork of **[Marky by Tommertom](https://github.com/Tommertom/marky)**. Credit is due: the original WYSIWYG editor, its offline-first design, and the editable-HTML workflow are upstream's work. This fork adds 22 themes, text obfuscation, password-based encryption, page setup for PDF/DOCX, DOCX in HTML exports.
 
 ## ✨ What You Can Do
 
