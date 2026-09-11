@@ -5,6 +5,7 @@
   "main": "md-to-docx.js",
   "type": "module",
   "scripts": {
+    "check": "node scripts/check.cjs",
     "convert": "node md-to-docx.js",
     "serve": "npx http-server -S -C certs/cert.pem -K certs/key.pem -p 8443 ."
   },
