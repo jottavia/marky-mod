@@ -24,6 +24,7 @@ exportBtn.addEventListener("click", async () => {
       formatBarRes,
       encryptRes,
       realCryptoRes,
+      pageSetupRes,
       htmlExportRes,
     ] = await Promise.all([
       fetch("/app.css"),
@@ -35,6 +36,7 @@ exportBtn.addEventListener("click", async () => {
       fetch("/format-bar.js"),
       fetch("/encrypt.js"),
       fetch("/real-crypto.js"),
+      fetch("/page-setup.js"),
       fetch("/html-export.js"),
     ]);
     cssContent = await cssRes.text();
@@ -48,6 +50,7 @@ exportBtn.addEventListener("click", async () => {
       await formatBarRes.text(),
       await encryptRes.text(),
       await realCryptoRes.text(),
+      await pageSetupRes.text(),
       await htmlExportRes.text(),
     ].join("\n\n");
   } catch (err) {
@@ -140,6 +143,15 @@ ${cssContent}
                     </svg>
                     Obfuscate
                 </button>
+                <button id="pageSetupBtn" title="Page setup for PDF and DOCX (size and margins)" aria-label="Open page setup">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="9" y1="13" x2="15" y2="13"></line>
+                        <line x1="9" y1="17" x2="15" y2="17"></line>
+                    </svg>
+                    Page
+                </button>
                 <div class="theme-toggle-container">
                     <select id="themeSelect" class="theme-select" aria-label="Select color theme" title="Select color theme">
                     </select>
@@ -174,6 +186,22 @@ ${cssContent}
             <button id="rcEncryptBtn" title="Encrypt selection (or whole document)">Encrypt</button>
             <button id="rcDecryptBtn" title="Decrypt selected MK2$ envelope">Decrypt</button>
             <span class="encrypt-note">Only AES-GCM detects wrong passwords; others yield garbage. Random salt + IV every time.</span>
+        </div>
+
+        <div id="pageSetupBar" class="page-setup-bar" aria-label="Page setup for PDF and DOCX exports">
+            <span class="encrypt-title">Page setup</span>
+            <select id="pageSizeSelect" class="theme-select" aria-label="Paper size"></select>
+            <label for="marginTopInput">Top</label>
+            <input id="marginTopInput" type="number" min="0" max="3" step="0.25" value="1" aria-label="Top margin in inches">
+            <label for="marginRightInput">Right</label>
+            <input id="marginRightInput" type="number" min="0" max="3" step="0.25" value="1" aria-label="Right margin in inches">
+            <label for="marginBottomInput">Bottom</label>
+            <input id="marginBottomInput" type="number" min="0" max="3" step="0.25" value="1" aria-label="Bottom margin in inches">
+            <label for="marginLeftInput">Left</label>
+            <input id="marginLeftInput" type="number" min="0" max="3" step="0.25" value="1" aria-label="Left margin in inches">
+            <span class="encrypt-note">inches</span>
+            <button id="pageSetupClose" title="Close page setup">Close</button>
+            <span class="encrypt-note">Applies to PDF and DOCX exports. Default: Letter 8.5 × 11 in, 1-inch margins.</span>
         </div>
         
         <div id="formatBar" class="format-bar">

@@ -275,7 +275,8 @@
         outline-offset: 1px;
       }
 
-      .encrypt-bar {
+      .encrypt-bar,
+      .page-setup-bar {
         display: none;
         gap: 0.4rem;
         align-items: center;
@@ -287,7 +288,8 @@
         color: var(--text-primary);
       }
 
-      .encrypt-bar.visible {
+      .encrypt-bar.visible,
+      .page-setup-bar.visible {
         display: flex;
       }
 
@@ -296,13 +298,19 @@
         white-space: nowrap;
       }
 
-      .encrypt-bar input[type="number"] {
+      .encrypt-bar input[type="number"],
+      .page-setup-bar input[type="number"] {
         width: 3rem;
         background: var(--bg-editor);
         color: var(--text-primary);
         border: 1px solid var(--border-secondary);
         border-radius: 3px;
         padding: 0.2rem 0.3rem;
+        font-size: 0.72rem;
+      }
+
+      .page-setup-bar label {
+        color: var(--text-secondary);
         font-size: 0.72rem;
       }
 

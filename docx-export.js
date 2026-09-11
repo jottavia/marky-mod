@@ -161,7 +161,7 @@
       /**
        * Pre-process mermaid diagrams for DOCX export
        */
-      async function prepareMermaidForDocx() {
+      async function prepareMermaidForDocx(maxWidthPx = 624) {
         mermaidImagesForDocx = [];
         const wrappers = editor.querySelectorAll(".mermaid-wrapper");
 
@@ -171,7 +171,7 @@
 
           if (svg) {
             try {
-              const imageData = await svgToPngDataUrl(svg);
+              const imageData = await svgToPngDataUrl(svg, maxWidthPx);
               mermaidImagesForDocx.push({
                 index: i,
                 ...imageData,
@@ -438,8 +438,8 @@
                   // Convert data URL to base64
                   const base64Data = imageData.dataUrl.split(",")[1];
 
-                  // Scale image to fit DOCX page width (6.5 inches at 96 DPI = 624px)
-                  const maxDocxWidth = 624;
+                  // Scale image to fit the content width
+                  const maxDocxWidth = contentWidthPx;
                   let imgWidth = imageData.width;
                   let imgHeight = imageData.height;
                   if (imgWidth > maxDocxWidth) {
@@ -552,8 +552,31 @@
       async function generateDOCX() {
         console.log("[DOCX] Starting DOCX generation");
 
+        const setup =
+          typeof PageSetup !== "undefined"
+            ? PageSetup.getPageSetup()
+            : {
+                size: { wTwips: 12240, hTwips: 15840 },
+                margins: { top: 1, right: 1, bottom: 1, left: 1 },
+              };
+        const twipsPerInch = 1440;
+        const marginTop = Math.round(setup.margins.top * twipsPerInch);
+        const marginRight = Math.round(setup.margins.right * twipsPerInch);
+        const marginBottom = Math.round(setup.margins.bottom * twipsPerInch);
+        const marginLeft = Math.round(setup.margins.left * twipsPerInch);
+        // Content width in pixels at 96 DPI drives mermaid image scaling
+        const contentWidthPx = Math.max(
+          200,
+          Math.round(
+            (setup.size.wIn -
+              setup.margins.left -
+              setup.margins.right) *
+              96
+          )
+        );
+
         // Pre-process mermaid diagrams to images
-        await prepareMermaidForDocx();
+        await prepareMermaidForDocx(contentWidthPx);
 
         const title = extractDocxTitle();
         const docxElements = convertHtmlToDocxElements();
@@ -603,13 +626,17 @@
             {
               properties: {
                 page: {
+                  size: {
+                    width: setup.size.wTwips,
+                    height: setup.size.hTwips,
+                  },
                   margin: {
-                    top: 1440, // 1 inch
-                    right: 1440,
-                    bottom: 1440,
-                    left: 1440,
-                    header: 720, // 0.5 inch
-                    footer: 720,
+                    top: marginTop,
+                    right: marginRight,
+                    bottom: marginBottom,
+                    left: marginLeft,
+                    header: Math.min(720, marginTop),
+                    footer: Math.min(720, marginBottom),
                     gutter: 0,
                   },
                 },

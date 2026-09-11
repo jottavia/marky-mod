@@ -32,6 +32,7 @@ check("node --check on JS files", () => {
     "format-bar.js",
     "encrypt.js",
     "real-crypto.js",
+    "page-setup.js",
     "html-export.js",
     "pdf-export.js",
     "docx-export.js",
@@ -214,6 +215,69 @@ check("real encryption", () => {
   );
   const css = read("app.css");
   assert(css.includes(".encrypt-danger"), ".encrypt-danger styles missing from app.css");
+});
+
+// 7. Page setup: Letter default with 1-inch margins, panel wired into
+//    index.html and the export, honored by PDF and DOCX exporters.
+check("page setup", () => {
+  const ps = read("page-setup.js");
+  const html = read("index.html");
+  const exp = read("html-export.js");
+  assert(
+    ps.includes('DEFAULT_PAGE_SIZE_ID = "letter"'),
+    "default page size is not letter",
+  );
+  for (const id of ["letter", "legal", "tabloid", "a4", "a5"]) {
+    assert(ps.includes(`${id}:`), `page size "${id}" missing from page-setup.js`);
+  }
+  const letter = ps.match(/letter:\s*\{([^}]+)\}/);
+  assert(letter, "letter size block not found");
+  for (const dim of ["wIn: 8.5", "hIn: 11", "wTwips: 12240", "hTwips: 15840"]) {
+    assert(letter[1].includes(dim), `letter dimensions wrong (missing ${dim})`);
+  }
+  assert(
+    /top: 1, right: 1, bottom: 1, left: 1/.test(ps),
+    "default margins are not 1 inch",
+  );
+  for (const id of [
+    'id="pageSetupBtn"',
+    'id="pageSetupBar"',
+    'id="pageSizeSelect"',
+    'id="marginTopInput"',
+    'id="marginRightInput"',
+    'id="marginBottomInput"',
+    'id="marginLeftInput"',
+    'id="pageSetupClose"',
+  ]) {
+    assert(html.includes(id), `${id} missing from index.html`);
+    assert(exp.includes(id), `${id} missing from html-export.js`);
+  }
+  assert(
+    html.includes('<script src="/page-setup.js"></script>'),
+    "page-setup.js not loaded in index.html",
+  );
+  assert(
+    exp.includes('fetch("/page-setup.js")'),
+    "export does not fetch /page-setup.js",
+  );
+  assert(
+    /await pageSetupRes\.text\(\)/.test(exp),
+    "export does not embed page-setup.js content",
+  );
+  const css = read("app.css");
+  assert(css.includes(".page-setup-bar"), ".page-setup-bar styles missing from app.css");
+  const pdf = read("pdf-export.js");
+  assert(pdf.includes("PageSetup"), "pdf-export.js does not honor PageSetup");
+  assert(
+    !/format: "a4"/.test(pdf),
+    "pdf-export.js still hardcodes A4",
+  );
+  const docx = read("docx-export.js");
+  assert(docx.includes("PageSetup"), "docx-export.js does not honor PageSetup");
+  assert(
+    docx.includes("setup.size.wTwips"),
+    "docx-export.js does not set page size from PageSetup",
+  );
 });
 
 if (failures.length > 0) {

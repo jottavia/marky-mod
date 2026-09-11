@@ -98,6 +98,14 @@ async function generatePDF() {
 
   const element = editor.cloneNode(true);
   const filename = generatePDFFilename();
+  const setup =
+    typeof PageSetup !== "undefined"
+      ? PageSetup.getPageSetup()
+      : {
+          size: { wMm: 215.9, hMm: 279.4, jspdf: "letter" },
+          margins: { top: 1, right: 1, bottom: 1, left: 1 },
+        };
+  const mmPerInch = 25.4;
 
   // Create a temporary wrapper to hold the cloned element
   // Must be visible for html2canvas to render properly
@@ -105,7 +113,7 @@ async function generatePDF() {
   wrapper.style.position = "fixed";
   wrapper.style.left = "-10000px"; // Off-screen but must be rendered
   wrapper.style.top = "0";
-  wrapper.style.width = "210mm"; // A4 width
+  wrapper.style.width = `${setup.size.wMm}mm`; // Full page width
   wrapper.style.background = "#ffffff";
   wrapper.style.padding = "20px";
   wrapper.style.zIndex = "-1";
@@ -200,7 +208,12 @@ async function generatePDF() {
     const warnings = await processImages(element);
 
     const options = {
-      margin: [10, 10, 10, 10],
+      margin: [
+        setup.margins.top * mmPerInch,
+        setup.margins.left * mmPerInch,
+        setup.margins.bottom * mmPerInch,
+        setup.margins.right * mmPerInch,
+      ],
       filename: filename,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: {
@@ -214,7 +227,7 @@ async function generatePDF() {
         allowTaint: false,
         removeContainer: false,
       },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      jsPDF: { unit: "mm", format: setup.size.jspdf, orientation: "portrait" },
     };
 
     console.log("[PDF] Generating PDF with options:", options);
