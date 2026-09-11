@@ -23,6 +23,7 @@ exportBtn.addEventListener("click", async () => {
       pdfRes,
       formatBarRes,
       encryptRes,
+      realCryptoRes,
       htmlExportRes,
     ] = await Promise.all([
       fetch("/app.css"),
@@ -33,6 +34,7 @@ exportBtn.addEventListener("click", async () => {
       fetch("/pdf-export.js"),
       fetch("/format-bar.js"),
       fetch("/encrypt.js"),
+      fetch("/real-crypto.js"),
       fetch("/html-export.js"),
     ]);
     cssContent = await cssRes.text();
@@ -45,6 +47,7 @@ exportBtn.addEventListener("click", async () => {
       await pdfRes.text(),
       await formatBarRes.text(),
       await encryptRes.text(),
+      await realCryptoRes.text(),
       await htmlExportRes.text(),
     ].join("\n\n");
   } catch (err) {
@@ -164,6 +167,13 @@ ${cssContent}
             <button id="encryptApply" title="Apply to selection, or whole document if nothing is selected">Apply</button>
             <button id="encryptClose" title="Close obfuscation panel">Close</button>
             <span class="encrypt-note">Applies to selection (or whole document). Obfuscation only — not secure encryption. Leet decode is approximate.</span>
+            <span class="encrypt-divider" aria-hidden="true"></span>
+            <span class="encrypt-title">Real encryption <span class="encrypt-danger">— SECURITY UNTESTED · USE AT OWN RISK</span></span>
+            <select id="rcMethod" class="theme-select" aria-label="Encryption algorithm"></select>
+            <input id="rcPassword" type="password" placeholder="Password" autocomplete="off" aria-label="Encryption password">
+            <button id="rcEncryptBtn" title="Encrypt selection (or whole document)">Encrypt</button>
+            <button id="rcDecryptBtn" title="Decrypt selected MK2$ envelope">Decrypt</button>
+            <span class="encrypt-note">Only AES-GCM detects wrong passwords; others yield garbage. Random salt + IV every time.</span>
         </div>
         
         <div id="formatBar" class="format-bar">

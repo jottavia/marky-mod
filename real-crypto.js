@@ -640,14 +640,17 @@ function rcRabbitKeySetup(key16) {
 function rcRabbitIvSetup(st, iv8) {
   const w = (a, b, c2, d) =>
     ((iv8[a] << 24) | (iv8[b] << 16) | (iv8[c2] << 8) | iv8[d]) >>> 0;
-  st.c[0] ^= w(4, 5, 6, 7);
-  st.c[1] ^= w(0, 1, 4, 5);
-  st.c[2] ^= w(0, 1, 2, 3);
-  st.c[3] ^= w(2, 3, 6, 7);
-  st.c[4] ^= w(4, 5, 6, 7);
-  st.c[5] ^= w(0, 1, 4, 5);
-  st.c[6] ^= w(0, 1, 2, 3);
-  st.c[7] ^= w(2, 3, 6, 7);
+  // NOTE: >>> 0 normalization is load-bearing here. Plain ^= keeps
+  // JS signed 32-bit results, which corrupts the carry bit b in the
+  // counter update below (found via B.2 debug vectors).
+  st.c[0] = (st.c[0] ^ w(4, 5, 6, 7)) >>> 0;
+  st.c[1] = (st.c[1] ^ w(0, 1, 4, 5)) >>> 0;
+  st.c[2] = (st.c[2] ^ w(0, 1, 2, 3)) >>> 0;
+  st.c[3] = (st.c[3] ^ w(2, 3, 6, 7)) >>> 0;
+  st.c[4] = (st.c[4] ^ w(4, 5, 6, 7)) >>> 0;
+  st.c[5] = (st.c[5] ^ w(0, 1, 4, 5)) >>> 0;
+  st.c[6] = (st.c[6] ^ w(0, 1, 2, 3)) >>> 0;
+  st.c[7] = (st.c[7] ^ w(2, 3, 6, 7)) >>> 0;
   for (let i = 0; i < 4; i++) rcRabbitNext(st);
 }
 
@@ -655,9 +658,17 @@ function rcRabbitCrypt(key16, iv8, data) {
   const st = rcRabbitKeySetup(key16);
   if (iv8) rcRabbitIvSetup(st, iv8);
   const out = new Uint8Array(data.length);
-  const x = st.x;
   for (let off = 0; off < data.length; off += 16) {
     rcRabbitNext(st);
+    // Extraction follows the eSTREAM reference implementation
+    // (little-endian s-words, low words first), matching Crypto++,
+    // Botan, and RFC 4503 Appendix B debug states.
+    //
+    // NOTE: RFC 4503 Appendix A shows byte-reversed keystream blocks
+    // relative to every independent implementation; Crypto++ documents
+    // this ("the published test vectors arrived at the incorrect result
+    // when plugged back into the reference implementation") and ships
+    // reference-generated vectors instead. We follow the reference.
     const s = [
       (st.x[0] ^ (st.x[5] >>> 16) ^ (st.x[3] << 16)) >>> 0,
       (st.x[2] ^ (st.x[7] >>> 16) ^ (st.x[5] << 16)) >>> 0,
@@ -669,7 +680,6 @@ function rcRabbitCrypt(key16, iv8, data) {
     const n = Math.min(16, data.length - off);
     for (let i = 0; i < n; i++) out[off + i] = data[off + i] ^ ks[i];
   }
-  void x;
   return out;
 }
 
@@ -693,55 +703,81 @@ function rcU64le(b, off) {
   return v;
 }
 
+function rcU64be(b, off) {
+  let v = 0n;
+  for (let i = 0; i < 8; i++) v = (v << 8n) | BigInt(b[off + i]);
+  return v;
+}
+
 function rcPutU64le(b, off, v) {
   for (let i = 0; i < 8; i++) {
     b[off + i] = Number((v >> BigInt(8 * i)) & 0xffn);
   }
 }
 
-function rcSpeckExpand(key32) {
-  const l = [
-    rcU64le(key32, 8),
-    rcU64le(key32, 16),
-    rcU64le(key32, 24),
-  ];
-  const ks = [rcU64le(key32, 0)];
-  for (let i = 0; i < 33; i++) {
-    const li = (ks[i] + rcSpeckRotr64(l[i], 8)) & RC_SPECK_MASK64;
-    const nxt = (li ^ BigInt(i)) & RC_SPECK_MASK64;
-    l.push(nxt);
-    ks.push((rcSpeckRotl64(ks[i], 3) ^ nxt) & RC_SPECK_MASK64);
+function rcPutU64be(b, off, v) {
+  for (let i = 0; i < 8; i++) {
+    b[off + i] = Number((v >> BigInt(8 * (7 - i))) & 0xffn);
   }
-  return ks.slice(0, 34);
 }
 
-function rcSpeckEncryptBlock(block16, ks) {
-  let x = rcU64le(block16, 8);
-  let y = rcU64le(block16, 0);
-  for (let i = 0; i < 34; i++) {
-    x = ((rcSpeckRotr64(x, 8) + y) & RC_SPECK_MASK64) ^ ks[i];
+function rcSpeckExpand(keyBytes) {
+  // Block is always 128 bits; key may be 128 (m=2, 32 rounds),
+  // 192 (m=3, 33 rounds) or 256 bits (m=4, 34 rounds).
+  const m = keyBytes.length / 8;
+  if (m !== 2 && m !== 3 && m !== 4) {
+    throw new Error("Speck-128 needs a 16, 24 or 32-byte key.");
+  }
+  const rounds = [0, 0, 32, 33, 34][m];
+  // Key words are big-endian readings of the 8-byte groups, numbered
+  // from the END: K[0] is the last group. (Paper Appendix C lists
+  // groups high-word-first; confirmed by the 128/128 round keys
+  // k0=0706050403020100, k1=37253b31171d0309.)
+  // Plaintext/ciphertext blocks use little-endian words below.
+  const words = [];
+  for (let i = 0; i < m; i++) words.push(rcU64be(keyBytes, (m - 1 - i) * 8));
+  const l = words.slice(1);
+  const ks = [words[0]];
+  for (let i = 0; i < rounds - 1; i++) {
+    const nxt = ((ks[i] + rcSpeckRotr64(l[i], 8)) & RC_SPECK_MASK64) ^ BigInt(i);
+    l.push(nxt & RC_SPECK_MASK64);
+    ks.push((rcSpeckRotl64(ks[i], 3) ^ l[i + m - 1]) & RC_SPECK_MASK64);
+  }
+  return { ks, rounds };
+}
+
+function rcSpeckEncryptBlock(block16, rk) {
+  // Byte convention matches the Arduino Cryptography Library (rweather):
+  // words are big-endian readings straight off the byte stream,
+  // x = first half, y = second half. This reproduces the paper's
+  // Appendix C vectors byte-for-byte from the published byte arrays.
+  let x = rcU64be(block16, 0);
+  let y = rcU64be(block16, 8);
+  for (let i = 0; i < rk.rounds; i++) {
+    x = ((rcSpeckRotr64(x, 8) + y) & RC_SPECK_MASK64) ^ rk.ks[i];
     y = rcSpeckRotl64(y, 3) ^ x;
   }
   const out = new Uint8Array(16);
-  rcPutU64le(out, 0, y);
-  rcPutU64le(out, 8, x);
+  rcPutU64be(out, 0, x);
+  rcPutU64be(out, 8, y);
   return out;
 }
 
-function rcSpeckDecryptBlock(block16, ks) {
-  let y = rcU64le(block16, 0);
-  let x = rcU64le(block16, 8);
-  for (let i = 33; i >= 0; i--) {
-    y = rcSpeckRotr64(y ^ x, 61);
-    // x = ROTR(((x ^ k) - y) mod 2^64, 8)
-    x = rcSpeckRotr64(
-      (((x ^ ks[i]) & RC_SPECK_MASK64) - y + (1n << 64n)) & RC_SPECK_MASK64,
+function rcSpeckDecryptBlock(block16, rk) {
+  let x = rcU64be(block16, 0);
+  let y = rcU64be(block16, 8);
+  for (let i = rk.rounds - 1; i >= 0; i--) {
+    // Inverse of y' = ROTL(y,3) ^ x'  ->  y = ROTR(y' ^ x', 3)
+    y = rcSpeckRotr64(y ^ x, 3);
+    // Inverse of x' = (ROTR(x,8) + y) ^ k  ->  x = ROTL((x' ^ k) - y, 8)
+    x = rcSpeckRotl64(
+      (((x ^ rk.ks[i]) & RC_SPECK_MASK64) - y + (1n << 64n)) & RC_SPECK_MASK64,
       8,
     );
   }
   const out = new Uint8Array(16);
-  rcPutU64le(out, 0, y);
-  rcPutU64le(out, 8, x);
+  rcPutU64be(out, 0, x);
+  rcPutU64be(out, 8, y);
   return out;
 }
 
@@ -952,7 +988,13 @@ function rcXxteaDecrypt(key16, data) {
 
 function rcTriviumCrypt(key10, iv10, data) {
   const s = new Uint8Array(288);
-  const getBit = (bytes, i) => (bytes[i >> 3] >> (7 - (i & 7))) & 1;
+  // Bit convention (eSTREAM reference / avr-crypto-lib vectors):
+  // key byte string read last-byte-first, MSB-first within each byte,
+  // i.e. key hex "8000..00" sets state bit 72. Verified: with this
+  // mapping the keystream for single-bit keys matches the published
+  // vectors (38EB86FF.. for k72, 5D492E77.. for k0) byte-for-byte.
+  // Output bytes are packed MSB-first.
+  const getBit = (bytes, i) => (bytes[(79 - i) >> 3] >> ((79 - i) & 7)) & 1;
   for (let i = 0; i < 80; i++) s[i] = getBit(key10, i);
   for (let i = 0; i < 80; i++) s[93 + i] = getBit(iv10, i);
   s[285] = 1;
@@ -977,8 +1019,9 @@ function rcTriviumCrypt(key10, iv10, data) {
   for (let i = 0; i < 1152; i++) clock(false);
   const out = new Uint8Array(data.length);
   for (let i = 0; i < data.length; i++) {
+    // Bytes are packed LSB-first: first keystream bit -> bit 0.
     let ks = 0;
-    for (let j = 0; j < 8; j++) ks = (ks << 1) | clock(true);
+    for (let j = 0; j < 8; j++) ks |= clock(true) << j;
     out[i] = data[i] ^ ks;
   }
   return out;
@@ -1271,6 +1314,7 @@ const RealCrypto = {
     rcChaChaXor,
     rc4Crypt,
     rcRabbitKeySetup,
+    rcRabbitIvSetup,
     rcRabbitNext,
     rcRabbitCrypt,
     rcSpeckExpand,

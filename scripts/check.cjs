@@ -31,6 +31,7 @@ check("node --check on JS files", () => {
     "theme-manager.js",
     "format-bar.js",
     "encrypt.js",
+    "real-crypto.js",
     "html-export.js",
     "pdf-export.js",
     "docx-export.js",
@@ -99,6 +100,18 @@ check("html-export theme parity", () => {
   );
   assert(exp.includes('id="encryptBtn"'), "export toolbar lacks #encryptBtn");
   assert(exp.includes('id="encryptBar"'), "export lacks #encryptBar panel");
+  assert(
+    exp.includes('fetch("/real-crypto.js")'),
+    'export does not fetch /real-crypto.js',
+  );
+  assert(
+    /await realCryptoRes\.text\(\)/.test(exp),
+    "export does not embed real-crypto.js content",
+  );
+  assert(exp.includes('id="rcMethod"'), "export lacks #rcMethod");
+  assert(exp.includes('id="rcPassword"'), "export lacks #rcPassword");
+  assert(exp.includes('id="rcEncryptBtn"'), "export lacks #rcEncryptBtn");
+  assert(exp.includes('id="rcDecryptBtn"'), "export lacks #rcDecryptBtn");
 });
 
 // 4. Paste sanitizer present and wired into the paste handler.
@@ -157,6 +170,50 @@ check("obfuscation toolkit", () => {
   );
   const css = read("app.css");
   assert(css.includes(".encrypt-bar"), ".encrypt-bar styles missing from app.css");
+});
+
+// 6. Real encryption: all 10 algorithms registered, untested-use-at-own-risk
+//    labeling present, panel wired into index.html and the export.
+check("real encryption", () => {
+  const rc = read("real-crypto.js");
+  const html = read("index.html");
+  const exp = read("html-export.js");
+  for (const id of [
+    "aes-gcm",
+    "aes-cbc",
+    "aes-cbc-pure",
+    "chacha20",
+    "rabbit",
+    "speck",
+    "xtea",
+    "xxtea",
+    "trivium",
+    "rc4",
+  ]) {
+    assert(
+      rc.includes(`id: "${id}"`),
+      `algorithm "${id}" missing from real-crypto.js registry`,
+    );
+  }
+  assert(
+    /SECURITY UNTESTED/.test(rc),
+    "untested-use-at-own-risk disclaimer missing from real-crypto.js",
+  );
+  for (const id of [
+    'id="rcMethod"',
+    'id="rcPassword"',
+    'id="rcEncryptBtn"',
+    'id="rcDecryptBtn"',
+  ]) {
+    assert(html.includes(id), `${id} missing from index.html`);
+    assert(exp.includes(id), `${id} missing from html-export.js`);
+  }
+  assert(
+    html.includes('<script src="/real-crypto.js"></script>'),
+    "real-crypto.js not loaded in index.html",
+  );
+  const css = read("app.css");
+  assert(css.includes(".encrypt-danger"), ".encrypt-danger styles missing from app.css");
 });
 
 if (failures.length > 0) {

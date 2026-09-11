@@ -306,6 +306,28 @@
         font-size: 0.72rem;
       }
 
+      .encrypt-bar input[type="password"] {
+        background: var(--bg-editor);
+        color: var(--text-primary);
+        border: 1px solid var(--border-secondary);
+        border-radius: 3px;
+        padding: 0.2rem 0.4rem;
+        font-size: 0.72rem;
+        max-width: 130px;
+      }
+
+      .encrypt-divider {
+        flex-basis: 100%;
+        height: 1px;
+        background: var(--border-primary);
+      }
+
+      .encrypt-danger {
+        color: #d43d2a;
+        font-weight: 700;
+        text-decoration: underline;
+      }
+
       .encrypt-note {
         color: var(--text-secondary);
         font-style: italic;
