@@ -9,7 +9,7 @@
     </title>
     <meta
       name="description"
-      content="Marky is a powerful, privacy-focused WYSIWYG markdown editor that runs entirely in your browser. Perfect for spec-driven AI development workflows. No installation, no sign-up, 100% free - edit markdown files instantly!"
+      content="Markey-Mod is a powerful, privacy-focused WYSIWYG markdown editor that runs entirely in your browser. 22 themes, text obfuscation, password encryption, PDF/DOCX export with page setup. No installation, no sign-up, 100% free - edit markdown files instantly!"
     />
     <meta
       name="keywords"
@@ -71,8 +71,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Marky Markdown Editor",
-        "description": "A powerful, privacy-focused WYSIWYG markdown editor that runs entirely in your browser. No installation, no sign-up, no data sent to servers.",
+        "name": "Markey-Mod Markdown Editor",
+        "description": "A powerful, privacy-focused WYSIWYG markdown editor that runs entirely in your browser. 22 themes, text obfuscation, password encryption, PDF/DOCX export. No installation, no sign-up, no data sent to servers.",
         "url": "https://marky-md.web.app/",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "Web Browser",
@@ -83,6 +83,9 @@
         },
         "featureList": [
           "WYSIWYG Markdown Editing",
+          "22 Color Themes",
+          "Text Obfuscation and Password Encryption",
+          "PDF and DOCX Export with Page Setup",
           "100% Privacy - All Local Processing",
           "No Account Required",
           "Works Offline",
@@ -350,7 +353,7 @@
               <option value="dark">Dark</option>
             </select>
             <a
-              href="https://github.com/Tommertom/marky"
+              href="https://github.com/jottavia/marky-mod"
               target="_blank"
               rel="noopener noreferrer"
               id="githubBtn"
@@ -611,7 +614,45 @@
             <strong>Export HTML</strong> - Generate editable HTML files that
             anyone can modify and return to you!
           </li>
+          <li>
+            <strong>PDF / DOCX</strong> - Export print-ready documents with
+            your page setup
+          </li>
         </ul>
+        <h2>🎨 Themes</h2>
+        <p>
+          Markey-Mod ships with 22 themes: Light, Dark, and 20
+          Fable-inspired color schemes. Open the theme dropdown in the
+          toolbar to switch — your choice is saved and even travels inside
+          exported HTML files.
+        </p>
+        <h2>🔒 Obfuscate</h2>
+        <p>
+          Click <strong>Obfuscate</strong> for playful text transforms:
+          ROT13, ROT47, Caesar, Atbash, Reverse, Base64, Hex, Binary, URL
+          encoding, and Leet speak. Applies to your selection, or the whole
+          document. Obfuscation only — not secure encryption.
+        </p>
+        <h2>🔐 Real encryption</h2>
+        <p>
+          The same panel offers password-based encryption: AES-256-GCM,
+          AES-256-CBC, ChaCha20, Rabbit, Speck, XTEA, XXTEA, Trivium, and
+          RC4. Results are packed as <code>MK2$...</code> envelopes you can
+          decrypt with the same password.
+        </p>
+        <p>
+          <strong>Warning:</strong> this implementation is
+          <strong>security untested — use at own risk</strong>. Only
+          AES-GCM detects wrong passwords; the rest return garbage instead
+          of failing.
+        </p>
+        <h2>📄 Page setup</h2>
+        <p>
+          Click <strong>Page</strong> to choose paper size (Letter, Legal,
+          Tabloid, A4, A5 — Letter 8.5 × 11 in by default) and per-side
+          margins in inches (1 inch by default). PDF and DOCX exports honor
+          these settings.
+        </p>
         <h2>⌨️ Keyboard Shortcuts</h2>
         <ul>
           <li><strong>Ctrl+S</strong> (Cmd+S on Mac) - Download markdown</li>
@@ -624,10 +665,10 @@
         </ul>
         <h2>🔄 Collaborative Workflow</h2>
         <p>
-          Export as HTML to share editable documents. Recipients can open the
-          HTML file in any browser, make their edits, save, and send it back to
-          you. No markdown knowledge required! All editing happens locally - no
-          data sent to servers.
+          Export as HTML or DOCX to share editable documents. Recipients
+          can open the files in any browser or Word, make their edits, and
+          send them back to you. No markdown knowledge required! All
+          editing happens locally - no data sent to servers.
         </p>
         <p>
           <strong>Ready to write?</strong> Click "Clear" to start with a blank

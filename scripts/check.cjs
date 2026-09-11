@@ -297,6 +297,42 @@ check("page setup", () => {
   );
 });
 
+// 8. Welcome copy: default-content.js and the index.html static block stay
+//    in sync on the default-doc markers app.js depends on, and document
+//    the shipped features. GitHub entry points at the fork.
+check("welcome copy", () => {
+  const dc = read("default-content.js");
+  const html = read("index.html");
+  const app = read("app.js");
+  for (const marker of ["👋 Welcome to Markey-Mod", "Quick Start"]) {
+    assert(dc.includes(marker), `default-content.js missing marker ${marker}`);
+    assert(html.includes(marker), `index.html static block missing marker ${marker}`);
+    assert(app.includes(marker), `app.js detection missing marker ${marker}`);
+  }
+  for (const keyword of [
+    "22 themes",
+    "Obfuscate",
+    "MK2$",
+    "SECURITY UNTESTED",
+    "Page setup",
+    "Letter",
+  ]) {
+    assert(
+      dc.toLowerCase().includes(keyword.toLowerCase()),
+      `default-content.js does not mention ${keyword}`,
+    );
+  }
+  assert(
+    html.includes("https://github.com/jottavia/marky-mod"),
+    "index.html GitHub button does not point at the fork",
+  );
+  const exp = read("html-export.js");
+  assert(
+    exp.includes("https://github.com/jottavia/marky-mod"),
+    "export GitHub button does not point at the fork",
+  );
+});
+
 if (failures.length > 0) {
   console.error(`\n${failures.length} check(s) failed.`);
   process.exit(1);

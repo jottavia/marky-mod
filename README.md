@@ -1,4 +1,4 @@
-# 📝 Marky - Simple & Free Markdown Editor
+# 📝 Markey-Mod - Simple & Free Markdown Editor
 
 A powerful WYSIWYG markdown editor that runs entirely in your browser. No installation, no sign-up required!
 
@@ -19,14 +19,24 @@ A powerful WYSIWYG markdown editor that runs entirely in your browser. No instal
 - **Formatting Toolbar** - Select any text to reveal formatting options (headings, bold, italic, lists, code blocks)
 - **Live Updates** - Changes appear instantly as you type
 - **Auto-Save** - Your work is automatically saved to your browser every second
-- **Dark Mode** - Toggle between light and dark themes, or let it follow your system preference
+- **22 Themes** - Light, Dark, and 20 Fable-inspired color schemes from the theme dropdown; your choice is saved and travels inside exported HTML files
 - **Clear Document** - Start fresh with a single click
+
+### 🔒 Obfuscate & Encrypt
+
+- **Obfuscate** - Playful text transforms (ROT13, ROT47, Caesar, Atbash, Reverse, Base64, Hex, Binary, URL encoding, Leet speak) applied to your selection or the whole document. Obfuscation only — not secure encryption
+- **Real encryption** - Password-based encryption (AES-256-GCM, AES-256-CBC, ChaCha20, Rabbit, Speck, XTEA, XXTEA, Trivium, RC4) packed as `MK2$...` envelopes. ⚠️ **Security untested — use at own risk.** Only AES-GCM detects wrong passwords
+
+### 📄 Page Setup
+
+- Click **Page** to choose paper size (Letter, Legal, Tabloid, A4, A5 — Letter 8.5 × 11 in by default) and per-side margins in inches (1 inch by default). PDF and DOCX exports honor these settings
 
 ### 💾 Export Your Work
 - **Download as Markdown** - Save your work as a `.md` file
 - **Copy to Clipboard** - Instantly copy all your markdown with one click
 - **Export as HTML** - Generate standalone, **fully editable** HTML files that recipients can modify and send back. Perfect for collaborative workflows - they can edit the HTML directly in their browser, make changes, and return it to you as markdown!
-- **Export as PDF** - Generate professional, print-ready PDF documents with one click. Images are automatically optimized to ensure reasonable file sizes while maintaining quality
+- **Export as PDF** - Generate professional, print-ready PDF documents with one click, using your page setup (paper size and margins). Images are automatically optimized to ensure reasonable file sizes while maintaining quality
+- **Export as DOCX** - Generate Word documents with your page setup applied. Standalone HTML exports include the DOCX button too
 
 ### 🎨 What You Can Format
 - **Headings** (H1, H2, H3) - Organize your content with hierarchy
@@ -84,7 +94,9 @@ Make your workflow even faster:
 - ✅ **No Data Sent to Servers** - All editing happens locally in your browser
 - ✅ **Free Forever** - No subscriptions, no hidden fees
 - ✅ **Open Source** - Transparent and community-driven
-- ✅ **Dark Mode** - Automatic theme switching based on system preference, with manual override
+- ✅ **22 Themes** - Light, Dark, and 20 Fable-inspired schemes with manual override
+- ✅ **Obfuscation & Encryption** - ROT13-to-Base64 play plus password-based AES/ChaCha20/Rabbit/Speck/XTEA/XXTEA/Trivium/RC4 (security untested — use at own risk)
+- ✅ **Page Setup** - Letter/Legal/Tabloid/A4/A5 with per-side inch margins for PDF and DOCX
 
 ## 🛠️ Quick Start Guide
 
@@ -95,7 +107,7 @@ Make your workflow even faster:
 
 That's it! No tutorials needed.
 
-## 🌟 Why Marky?
+## 🌟 Why Markey-Mod?
 
 Unlike other markdown editors:
 - **Editable HTML exports** - Share documents that recipients can modify and return
@@ -111,12 +123,14 @@ Unlike other markdown editors:
 - Use the "Paste MD" button to quickly load markdown from anywhere
 - Your work auto-saves to localStorage - but download important files as a backup
 - Click "Clear" to start fresh with a new document
-- Toggle dark mode in the toolbar or let it automatically match your system theme
+- Pick a theme from the dropdown — it persists and travels inside exported HTML files
+- Select text, then **Obfuscate** for ciphers or **Encrypt** (with a password) for real encryption; decrypt `MK2$...` envelopes with the same password
+- Click **Page** to set paper size and margins before exporting PDF/DOCX
 - **Collaborative HTML Workflow**: Export as HTML and share with colleagues. They can open it in any browser, edit the content directly, save their changes, and send the modified HTML back to you. You can then extract their changes as markdown!
 
 ## 🤝 For Developers
 
-Built with vanilla JavaScript and modern web standards. Check out the [GitHub repository](https://github.com/Tommertom/marky) to:
+Built with vanilla JavaScript and modern web standards. Check out the [GitHub repository](https://github.com/jottavia/marky-mod) to:
 - Report bugs or issues
 - Suggest new features
 - Contribute code improvements
