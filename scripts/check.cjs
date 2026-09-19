@@ -568,6 +568,88 @@ check("no upstream remnants", () => {
   );
 });
 
+// 14. Font picker parity: the Word-style family + size controls exist in the
+//     app toolbar and the exported toolbar, the module ships inside exported
+//     HTML files, and every exporter honors the picker's live selection.
+check("font picker", () => {
+  const html = read("index.html");
+  for (const id of [
+    "fontFamilySelect",
+    "fontSizeSelect",
+    "fontGrowBtn",
+    "fontShrinkBtn",
+  ]) {
+    assert(html.includes(`id="${id}"`), `index.html toolbar lacks #${id}`);
+  }
+  assert(
+    html.includes('<script src="./font-picker.js">'),
+    "index.html does not load font-picker.js",
+  );
+
+  const fp = read("font-picker.js");
+  for (const fam of [
+    "default",
+    "calibri",
+    "arial",
+    "times",
+    "georgia",
+    "verdana",
+    "trebuchet",
+    "cambria",
+    "garamond",
+    "consolas",
+    "courier",
+    "comic",
+    "impact",
+  ]) {
+    assert(fp.includes(`${fam}:`), `font-picker.js lacks the ${fam} stack`);
+  }
+  assert(
+    fp.includes("8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72"),
+    "font-picker.js size list is not Word's size list",
+  );
+  assert(
+    fp.includes("marky-font-family") && fp.includes("marky-font-size"),
+    "font-picker.js does not persist both choices",
+  );
+
+  const exp = read("html-export.js");
+  assert(
+    exp.includes('id="fontFamilySelect"') &&
+      exp.includes('id="fontSizeSelect"'),
+    "export toolbar lacks the font selects",
+  );
+  assert(
+    exp.includes('fetch("font-picker.js")') &&
+      exp.includes("await fontPickerRes.text()"),
+    "export bundle does not ship font-picker.js",
+  );
+  assert(
+    exp.includes("editorFontStyle"),
+    "export does not carry the author font into #editor",
+  );
+
+  const pdf = read("pdf-export.js");
+  assert(
+    pdf.includes("FontPicker.getFont()"),
+    "pdf-export.js ignores the font picker",
+  );
+  const docx = read("docx-export.js");
+  assert(
+    docx.includes("FontPicker.getFont()") &&
+      docx.includes("docFont.sizePt * 2"),
+    "docx-export.js ignores the font picker",
+  );
+
+  const css = read("app.css");
+  assert(
+    css.includes(".font-group") &&
+      css.includes(".font-select") &&
+      css.includes(".font-size-select"),
+    "app.css lacks the font group styles",
+  );
+});
+
 if (failures.length > 0) {
   console.error(`\n${failures.length} check(s) failed.`);
   process.exit(1);

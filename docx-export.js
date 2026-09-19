@@ -581,6 +581,13 @@
         const title = extractDocxTitle();
         const docxElements = convertHtmlToDocxElements();
 
+        // Document font from the Word-style picker; defaults keep
+        // today's Arial 12pt output exactly (docx uses half-points).
+        const docFont =
+          typeof FontPicker !== "undefined"
+            ? FontPicker.getFont()
+            : { docxFont: "Arial", sizePt: 12 };
+
         const doc = new docx.Document({
           title: title,
           creator: "Marky Markdown Editor",
@@ -613,8 +620,8 @@
                 basedOn: "Normal",
                 next: "Normal",
                 run: {
-                  font: "Arial",
-                  size: 24, // 12pt
+                  font: docFont.docxFont,
+                  size: Math.round(docFont.sizePt * 2),
                 },
                 paragraph: {
                   spacing: { line: 276 }, // 1.15 line spacing

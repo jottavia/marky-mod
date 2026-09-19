@@ -351,6 +351,40 @@
             </svg>
             Obfuscate
           </button>
+          <div
+            class="font-group"
+            role="group"
+            aria-label="Document font (Word style)"
+          >
+            <select
+              id="fontFamilySelect"
+              class="font-select"
+              aria-label="Font family"
+              title="Font family (document default, like Word)"
+            ></select>
+            <select
+              id="fontSizeSelect"
+              class="font-size-select"
+              aria-label="Font size in points"
+              title="Font size in points (document default, like Word)"
+            ></select>
+            <button
+              id="fontGrowBtn"
+              class="font-step-btn"
+              title="Increase font size"
+              aria-label="Increase font size"
+            >
+              A▲
+            </button>
+            <button
+              id="fontShrinkBtn"
+              class="font-step-btn"
+              title="Decrease font size"
+              aria-label="Decrease font size"
+            >
+              A▼
+            </button>
+          </div>
           <div class="theme-toggle-container">
             <select
               id="themeSelect"
@@ -740,6 +774,7 @@
     <script src="./encrypt.js"></script>
     <script src="./real-crypto.js"></script>
     <script src="./page-setup.js"></script>
+    <script src="./font-picker.js"></script>
     <script src="./html-export.js"></script>
 
     <script src="./theme-manager.js"></script>

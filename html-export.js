@@ -26,6 +26,7 @@ exportBtn.addEventListener("click", async () => {
       encryptRes,
       realCryptoRes,
       pageSetupRes,
+      fontPickerRes,
       docxExportRes,
       htmlExportRes,
     ] = await Promise.all([
@@ -40,6 +41,7 @@ exportBtn.addEventListener("click", async () => {
       fetch("encrypt.js"),
       fetch("real-crypto.js"),
       fetch("page-setup.js"),
+      fetch("font-picker.js"),
       fetch("docx-export.js"),
       fetch("html-export.js"),
     ]);
@@ -56,6 +58,7 @@ exportBtn.addEventListener("click", async () => {
       await encryptRes.text(),
       await realCryptoRes.text(),
       await pageSetupRes.text(),
+      await fontPickerRes.text(),
       await docxExportRes.text(),
       await htmlExportRes.text(),
     ].join("\n\n");
@@ -67,6 +70,20 @@ exportBtn.addEventListener("click", async () => {
   // (ThemeManager will still respect the recipient's own saved preference on load.)
   const currentTheme =
     document.documentElement.getAttribute("data-theme") || "light";
+
+  // Same deal for the document font: inline it on the exported #editor so
+  // first paint matches the author's picker. The inlined font-picker.js only
+  // stamps its own styles when the recipient has a saved choice, so this
+  // survives as-is otherwise. Single-quote the stack: it sits inside a
+  // double-quoted style attribute.
+  const currentFont =
+    typeof FontPicker !== "undefined"
+      ? FontPicker.getFont()
+      : { stack: "", sizePt: 12 };
+  const editorFontStyle =
+    (currentFont.stack
+      ? `font-family:${currentFont.stack.replace(/"/g, "'")};`
+      : "") + `font-size:${currentFont.sizePt}pt;`;
 
   const htmlContent = `<!DOCTYPE html>
 <html lang="en" data-theme="${currentTheme}">
@@ -167,6 +184,12 @@ ${cssContent}
                     </svg>
                     Page
                 </button>
+                <div class="font-group" role="group" aria-label="Document font (Word style)">
+                    <select id="fontFamilySelect" class="font-select" aria-label="Font family" title="Font family (document default, like Word)"></select>
+                    <select id="fontSizeSelect" class="font-size-select" aria-label="Font size in points" title="Font size in points (document default, like Word)"></select>
+                    <button id="fontGrowBtn" class="font-step-btn" title="Increase font size" aria-label="Increase font size">A▲</button>
+                    <button id="fontShrinkBtn" class="font-step-btn" title="Decrease font size" aria-label="Decrease font size">A▼</button>
+                </div>
                 <div class="theme-toggle-container">
                     <select id="themeSelect" class="theme-select" aria-label="Select color theme" title="Select color theme">
                     </select>
@@ -267,7 +290,7 @@ ${cssContent}
             </button>
         </div>
         
-        <div id="editor" contenteditable="true" spellcheck="true" data-exported="true">
+        <div id="editor" contenteditable="true" spellcheck="true" data-exported="true" style="${editorFontStyle}">
             ${currentContent}
         </div>
     </div>

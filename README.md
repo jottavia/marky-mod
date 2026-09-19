@@ -26,6 +26,7 @@ Markey-Mod is a fork of **[Marky by Tommertom](https://github.com/Tommertom/mark
 - **Live Updates** - Changes appear instantly as you type
 - **Auto-Save** - Your work is automatically saved to your browser every second
 - **22 Themes** - Light, Dark, and 20 Fable-inspired color schemes from the theme dropdown; your choice is saved and travels inside exported HTML files
+- **Document Font** - Word-style font family (24 system fonts, no downloads) and point-size picker with grow/shrink controls; your choice is saved and honored by HTML, PDF, and DOCX exports
 - **Clear Document** - Start fresh with a single click
 
 ### 🔒 Obfuscate & Encrypt
@@ -103,6 +104,7 @@ Make your workflow even faster:
 - ✅ **22 Themes** - Light, Dark, and 20 Fable-inspired schemes with manual override
 - ✅ **Obfuscation & Encryption** - ROT13-to-Base64 play plus password-based AES/ChaCha20/Rabbit/Speck/XTEA/XXTEA/Trivium/RC4 (security untested — use at own risk)
 - ✅ **Page Setup** - Letter/Legal/Tabloid/A4/A5 with per-side inch margins for PDF and DOCX
+- ✅ **Document Font** - 24 Word-style system fonts plus point sizes with grow/shrink, honored by HTML, PDF, and DOCX exports
 
 ## 🛠️ Quick Start Guide
 
@@ -132,6 +134,7 @@ Unlike other markdown editors:
 - Pick a theme from the dropdown — it persists and travels inside exported HTML files
 - Select text, then **Obfuscate** for ciphers or **Encrypt** (with a password) for real encryption; decrypt `MK2$...` envelopes with the same password
 - Click **Page** to set paper size and margins before exporting PDF/DOCX
+- Pick a font family and size from the toolbar — it persists and is honored by HTML, PDF, and DOCX exports
 - **Collaborative HTML Workflow**: Export as HTML and share with colleagues. They can open it in any browser, edit the content directly, save their changes, and send the modified HTML back to you. You can then extract their changes as markdown!
 
 ## 🔒 Security notes

@@ -275,6 +275,50 @@
         outline-offset: 1px;
       }
 
+      /* Word-style font group: family box + size box + grow/shrink,
+         fenced off from the action buttons like Word's ribbon groups. */
+      .font-group {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+        flex-shrink: 0;
+        padding: 0 0.45rem;
+        border-left: 1px solid var(--border-secondary);
+        border-right: 1px solid var(--border-secondary);
+      }
+
+      .font-select,
+      .font-size-select {
+        background: var(--bg-format-bar);
+        color: var(--text-primary);
+        border: 1px solid var(--border-secondary);
+        border-radius: 3px;
+        padding: 0.22rem 0.25rem;
+        font-size: 0.7rem;
+        line-height: 1.2;
+        cursor: pointer;
+      }
+
+      .font-select {
+        max-width: 150px;
+      }
+
+      .font-size-select {
+        max-width: 52px;
+      }
+
+      .font-select:focus,
+      .font-size-select:focus {
+        outline: 2px solid var(--accent-blue);
+        outline-offset: 1px;
+      }
+
+      .font-step-btn {
+        padding: 0.22rem 0.4rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+      }
+
       .encrypt-bar,
       .page-setup-bar {
         display: none;

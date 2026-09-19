@@ -126,8 +126,14 @@ async function generatePDF() {
   element.style.padding = "0";
   element.style.width = "100%";
   element.style.fontFamily =
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif";
-  element.style.fontSize = "16px";
+    typeof FontPicker !== "undefined"
+      ? FontPicker.getFont().stack ||
+        "-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif"
+      : "-apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif";
+  element.style.fontSize =
+    typeof FontPicker !== "undefined"
+      ? `${FontPicker.getFont().sizePt}pt`
+      : "16px";
   element.style.lineHeight = "1.6";
 
   // Force light mode colors on all child elements
